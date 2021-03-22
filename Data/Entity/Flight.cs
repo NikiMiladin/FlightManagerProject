@@ -5,6 +5,7 @@ namespace Data.Entity
 {
     public class Flight
     {
+        public int Id { get; set;}
         public string Departure { get; set;}
         public string Arrival { get; set;}
         public string DepartureTime { get; set;}
@@ -14,7 +15,7 @@ namespace Data.Entity
         public string PilotName { get; set;}
         public string CapacityEconomyPassagers { get; set;}
         public string CapacityBusinessPassagers { get; set;}
-        public ICollection<Reservation> Reservations { get; set;}
+        public virtual ICollection<Reservation> Reservations { get; set;}
     }
     
 }
