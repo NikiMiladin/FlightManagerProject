@@ -6,7 +6,7 @@ using Data.Entity;
 
 namespace Data.Repositories
 {
-    interface IFlightRepository
+    public interface IFlightRepository
     {
         IQueryable<Flight> Items { get;}
         int Add(Flight Flight);

@@ -31,7 +31,7 @@ namespace Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FlightDb;Integrated Security=True");
+            builder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FlightDb;Integrated Security=True;");
             builder.UseLazyLoadingProxies();
         }
     }

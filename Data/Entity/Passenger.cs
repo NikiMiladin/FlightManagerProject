@@ -11,7 +11,7 @@ namespace Data.Entity
         public string MiddleName { get; set;}
         public string LastName { get; set;}
         public int EGN { get; set;}
-        public string PhoneNumber { get; set;}
+        public int PhoneNumber { get; set;}
         public bool TicketType { get; set;}
     }
 }

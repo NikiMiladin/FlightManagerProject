@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data;
+using Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,7 +25,9 @@ namespace FlightManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<FlightDb>();
             services.AddControllersWithViews();
+            services.AddScoped<IFlightRepository, FlightRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
