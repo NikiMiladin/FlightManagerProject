@@ -1,0 +1,28 @@
+﻿@model FlightListViewModel
+<h1>Flights</h1>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <table class="table-responsive table table-bordered table-striped col-12">
+                <thead>
+                <th>Id</th>
+                <th>Departure City</th>
+                <th>Arrival City</th>
+                <th>Departure Time</th>
+                <th>Flight Duration</th>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.DepartureCity</td>
+                        <td>@item.ArrivalCity</td>
+                        <td>@item.DepartureTime</td>
+                        <td>@item.FlightDuration</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ using Data.Entity;
 
 namespace Data.Repositories
 {
-    interface IPassengerRepository
+    public interface IPassengerRepository
     {
         IQueryable<Passenger> Items { get;}
         int Add(Passenger passenger);

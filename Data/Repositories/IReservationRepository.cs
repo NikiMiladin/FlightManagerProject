@@ -6,7 +6,7 @@ using Data.Entity;
 
 namespace Data.Repositories
 {
-    interface IReservationRepository
+    public interface IReservationRepository
     {
         IQueryable<Reservation> Items { get;}
         int Add(Reservation reservation);
