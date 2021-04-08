@@ -28,6 +28,8 @@ namespace FlightManager
             services.AddDbContext<FlightDb>();
             services.AddControllersWithViews();
             services.AddScoped<IFlightRepository, FlightRepository>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IPassengerRepository, PassengerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

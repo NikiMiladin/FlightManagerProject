@@ -12,6 +12,7 @@ namespace FlightManager.Models
         public int FlightId { get; set; }
         public Flight Flight { get; set; }
         public string Email { get; set; }
-        public ICollection<Passenger> Passengers { get; set; }
+        public int PassengersCount { get; set; }
+        public ICollection<PassengerViewModel> Passengers { get; set; }
     }
 }

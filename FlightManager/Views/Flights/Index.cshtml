@@ -10,6 +10,7 @@
                 <th>Arrival City</th>
                 <th>Departure Time</th>
                 <th>Flight Duration</th>
+                <th>Book Tickets</th>
                 <tbody>
                     @foreach (var item in Model.Items)
                     {
@@ -19,6 +20,9 @@
                         <td>@item.ArrivalCity</td>
                         <td>@item.DepartureTime</td>
                         <td>@item.FlightDuration</td>
+                        <td>
+                            <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
+                        </td>
                     </tr>
                     }
                 </tbody>

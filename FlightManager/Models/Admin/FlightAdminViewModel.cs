@@ -23,6 +23,6 @@ namespace FlightManager.Models
                 return ArrivalTime.Subtract(DepartureTime);
             }
         }
-        //public ICollection<ReservationsViewModel> Reservations { get; set; }
+        public ICollection<ReservationsViewModel> Reservations { get; set; }
     }
 }
