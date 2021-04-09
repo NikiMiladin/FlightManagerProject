@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data;
 using Data.Repositories;
+using Data.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightManager
 {
@@ -25,11 +28,15 @@ namespace FlightManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<FlightDb>();
+            services.AddDbContext<FlightDb>(options =>
+                options.UseSqlServer("DefaultConnection"));
             services.AddControllersWithViews();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
             services.AddScoped<IPassengerRepository, PassengerRepository>();
+            services.AddIdentityCore<ApplicationUser>()
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<FlightDb>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +57,7 @@ namespace FlightManager
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

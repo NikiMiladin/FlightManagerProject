@@ -6,6 +6,7 @@ using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FlightManager.Controllers
 {
