@@ -24,8 +24,9 @@ namespace Data.Repositories
         public int Add(Passenger passenger)
         {
             _dbContext.Passengers.Add(passenger);
-            _dbContext.Reservations.Add(passenger.Reservation);
+            //_dbContext.Reservations.Update(passenger.Reservation);
             return _dbContext.SaveChanges();
+            
         }
         public int Update(Passenger passenger)
         {

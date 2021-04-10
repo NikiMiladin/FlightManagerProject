@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace FlightManager.Models
 {
-    public class ReservationsAddViewModel
+    public class PassengerListViewModel
     {
-        public int Id { get; set; }
-        public int FlightId { get; set; }
+        public IEnumerable<PassengerViewModel> Items { get; set; }
     }
 }

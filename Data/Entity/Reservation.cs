@@ -9,7 +9,8 @@ namespace Data.Entity
         public int FlightId { get; set;}
         public virtual Flight Flight{get; set;}
         public string Email { get; set;}
-        public int PassengersCount { get; set; }
+        public int PassengersEconomyCount { get; set; }
+        public int PassengersBusinessCount { get; set; }
         public virtual ICollection<Passenger> Passengers {get; set;}
     }
 }

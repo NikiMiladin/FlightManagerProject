@@ -23,10 +23,14 @@ namespace Data.Repositories
         public int Add(Reservation reservation)
         {
             _dbContext.Reservations.Add(reservation);
-            foreach (var passenger in reservation.Passengers)
+            if(reservation.Passengers!=null)
             {
-                _dbContext.Passengers.Add(passenger);
+                foreach (var passenger in reservation.Passengers)
+                {
+                    _dbContext.Passengers.Add(passenger);
+                }
             }
+            
             return _dbContext.SaveChanges();
         }
         public int Update(Reservation reservation)

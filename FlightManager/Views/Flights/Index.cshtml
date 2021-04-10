@@ -22,11 +22,17 @@
                         <td>@item.FlightDuration</td>
                         <td>
                             <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+
+                            @**<form asp-action="Add" asp-controller="Reservations" asp-route-id="@item.Id" method="get">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            Add Reservation
+                                        </button>
+                                    </form>**@
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
