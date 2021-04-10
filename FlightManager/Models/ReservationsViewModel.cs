@@ -12,7 +12,8 @@ namespace FlightManager.Models
         public int FlightId { get; set; }
         public Flight Flight { get; set; }
         public string Email { get; set; }
-        public int PassengersCount { get; set; }
+        public int PassengersEconomyCount { get; set; }
+        public int PassengersBusinessCount { get; set; }
         public ICollection<PassengerViewModel> Passengers { get; set; }
     }
 }

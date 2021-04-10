@@ -25,7 +25,7 @@ namespace Data.Repositories
         public async Task<int> Add(Passenger passenger)
         {
             await _dbContext.Passengers.AddAsync(passenger);
-            await _dbContext.Reservations.AddAsync(passenger.Reservation);
+            // await _dbContext.Reservations.AddAsync(passenger.Reservation);
             return await _dbContext.SaveChangesAsync();
         }
         public async Task<int> Update(Passenger passenger)
