@@ -34,13 +34,24 @@ namespace FlightManager
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
             services.AddScoped<IPassengerRepository, PassengerRepository>();
-            services.AddIdentityCore<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<FlightDb>();
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                    .AddEntityFrameworkStores<FlightDb>()
+                    .AddDefaultTokenProviders();
+        
+            services.ConfigureApplicationCookie(options =>
+            {    
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout"; 
+                options.AccessDeniedPath = "/Account/AccessDenied"; 
+            });
+
+           // services.AddTransient<FlightDbContextSeedData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +71,8 @@ namespace FlightManager
             app.UseAuthentication();
             app.UseAuthorization();
 
+            Data.FlightDbContextSeedData.SeedRoles(roleManager);
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -2,7 +2,6 @@
 @model IEnumerable<ApplicationUser>
   
 <h1 class="bg-info text-white">All Users</h1>
-<a asp-action="Create" class="btn btn-secondary">Create a User</a>
 <a href="@Url.Action("Create","User")" class="btn btn-success">Create a User</a>
   
 <table class="table table-sm table-bordered">
@@ -18,6 +17,8 @@
         <td>@user.Email</td>
         <td>@user.PhoneNumber</td>
         <td>@user.Address</td>
+        <td><a href="@Url.Action("Edit","User", new {Id = user.Id})" class="btn btn-success">Update</a></td>
+        <td><a href="@Url.Action("Delete","User", new {Id = user.Id})" class="btn btn-success">Delete</a></td>
     </tr>
     }
 </table>
