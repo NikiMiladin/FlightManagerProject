@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Data.Entity;
 
 
 namespace Data
 {
-    public class FlightDb : DbContext
+    public class FlightDb : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Flight> Flights {get; set;}
-        public virtual DbSet<User> Users {get; set;}
         public virtual DbSet<Passenger> Passengers {get; set;}
         public virtual DbSet<Reservation> Reservations {get; set;}
-            /*public virtual DbSet<ReservationPassenger> ReservationPassengers {get; set;}
-            public virtual DbSet<FlightReservation> FlightReservations {get; set;}
-            */  
+
+        public FlightDb(DbContextOptions<FlightDb> options)
+        : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,7 +35,7 @@ namespace Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FlightDb;Integrated Security=True;");
+            builder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FlightDb;Integrated Security=True;Connect Timeout=30");
             builder.UseLazyLoadingProxies();
         }
     }

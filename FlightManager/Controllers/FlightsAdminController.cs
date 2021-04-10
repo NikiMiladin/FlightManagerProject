@@ -6,9 +6,10 @@ using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace FlightManager.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class FlightsAdminController : Controller
     {
         private readonly IFlightRepository _flightRepository;
@@ -82,6 +83,7 @@ namespace FlightManager.Controllers
                 return RedirectToAction("Index");
             }
         }
+        [Authorize]
         public IActionResult Index(FlightIndexViewModel model)
         {
             IQueryable<Flight> flights = _flightRepository.Items;

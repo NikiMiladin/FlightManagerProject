@@ -52,7 +52,7 @@ namespace FlightManager.Controllers
                     };
                     
                     _reservationRepository.Add(reservation);
-                    flight.Reservations.Add(reservation);
+                    //flight.Reservations.Add(reservation);
                     _flightRepository.Update(flight);
                     return RedirectToAction("AddPassengers", reservation);
                 }
@@ -72,7 +72,7 @@ namespace FlightManager.Controllers
             
         }
         [HttpPost]
-        public IActionResult AddPassengers(PassengerViewModel model)
+        public async Task<IActionResult> AddPassengers(PassengerViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -92,9 +92,9 @@ namespace FlightManager.Controllers
                     PhoneNumber = model.PhoneNumber,
                     TicketType = model.TicketType
                 };
-                _passengerRepository.Add(passenger);
+                await _passengerRepository.Add(passenger);
                 reservation.Passengers.Add(passenger);
-                _reservationRepository.Update(reservation);
+                await _reservationRepository.Update(reservation);
                 if(reservation.Passengers.Count==(economyCount+businessCount))
                     return View("./Index", "FlightList");
                 return RedirectToAction("AddPassengers", reservation);

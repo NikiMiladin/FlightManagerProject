@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Data.Entity;
 using Data.Repositories;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -20,39 +21,38 @@ namespace Data.Repositories
                 return _dbContext.Reservations;
             }      
         }
-        public int Add(Reservation reservation)
+        public async Task<int> Add(Reservation reservation)
         {
-            _dbContext.Reservations.Add(reservation);
+            await _dbContext.Reservations.AddAsync(reservation);
             if(reservation.Passengers!=null)
             {
                 foreach (var passenger in reservation.Passengers)
                 {
-                    _dbContext.Passengers.Add(passenger);
+                    await _dbContext.Passengers.AddAsync(passenger);
                 }
             }
-            
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
-        public int Update(Reservation reservation)
+        public async Task<int> Update(Reservation reservation)
         {
             _dbContext.Reservations.Update(reservation);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
-        public int AddOrUpdate(Reservation reservation)
+        public async Task<int> AddOrUpdate(Reservation reservation)
         {
             if(reservation.Id == 0)
             {
-                return this.Add(reservation);
+                return await this.Add(reservation);
             }
             else
             {
-                return this.Update(reservation);
+                return await this.Update(reservation);
             }
         }
-        public int Delete(Reservation reservation)
+        public async Task<int> Delete(Reservation reservation)
         {
             _dbContext.Reservations.Remove(reservation);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
