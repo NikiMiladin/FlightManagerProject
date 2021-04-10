@@ -39,7 +39,7 @@ namespace FlightManager.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Add(ReservationsViewModel model)
+        public async Task<IActionResult> Add(ReservationsViewModel model)
         {
             if(ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace FlightManager.Controllers
                     Email = model.Email,
                     PassengersCount = model.PassengersCount
                 };
-                _reservationRepository.Add(reservation);
+                await _reservationRepository.Add(reservation);
                 return RedirectToAction("AddPassengers", reservation.Id);
             }
             return View(model);
@@ -68,7 +68,7 @@ namespace FlightManager.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult AddPassengers(PassengerViewModel model)
+        public async Task<IActionResult> AddPassengers(PassengerViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace FlightManager.Controllers
                     PhoneNumber = model.PhoneNumber,
                     TicketType = model.TicketType
                 };
-                _passengerRepository.Add(passenger);
+                await _passengerRepository.Add(passenger);
             }//kolko puti i kak shte se izpulnqva, nakude da vodi???
             return View(model);
         }

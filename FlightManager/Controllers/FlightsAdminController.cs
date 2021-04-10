@@ -21,7 +21,7 @@ namespace FlightManager.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
+            Flight flight =  _flightRepository.Items.SingleOrDefault(item => item.Id == id);
             FlightAdminViewModel model;
             if (flight != null)
             {
@@ -46,14 +46,14 @@ namespace FlightManager.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Edit(FlightAdminViewModel model)
+        public async Task<IActionResult> Edit(FlightAdminViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            _flightRepository.AddOrUpdate(new Flight()
+            await _flightRepository.AddOrUpdate(new Flight()
             {
                 Id = model.Id,
                 DepartureCity = model.DepartureCity,
@@ -70,7 +70,7 @@ namespace FlightManager.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
             if (flight == null)
@@ -79,7 +79,7 @@ namespace FlightManager.Controllers
             }
             else
             {
-                _flightRepository.Delete(flight);
+                await _flightRepository.Delete(flight);
                 return RedirectToAction("Index");
             }
         }
