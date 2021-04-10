@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Data.Entity;
 using Data.Repositories;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -20,31 +21,31 @@ namespace Data.Repositories
                 return _dbContext.Flights;
             }      
         }
-        public int Add(Flight flight)
+        public async Task<int> Add(Flight flight)
         {
-            _dbContext.Flights.Add(flight);
-            return _dbContext.SaveChanges();
+            await _dbContext.Flights.AddAsync(flight);
+            return await _dbContext.SaveChangesAsync();
         }
-        public int Update(Flight flight)
+        public async Task<int> Update(Flight flight)
         {
             _dbContext.Flights.Update(flight);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
-        public int AddOrUpdate(Flight flight)
+        public async Task<int> AddOrUpdate(Flight flight)
         {
             if(flight.Id == 0)
             {
-                return this.Add(flight);
+                return await this.Add(flight);
             }
             else
             {
-                return this.Update(flight);
+                return await this.Update(flight);
             }
         }
-        public int Delete(Flight flight)
+        public async Task<int> Delete(Flight flight)
         {
             _dbContext.Flights.Remove(flight);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

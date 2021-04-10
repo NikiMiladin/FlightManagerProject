@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Repositories;
 using Data.Entity;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
     public interface IFlightRepository
     {
         IQueryable<Flight> Items { get;}
-        int Add(Flight Flight);
-        int Update(Flight Flight);
-        int AddOrUpdate(Flight Flight);
-        int Delete(Flight Flight);
+        Task<int> Add(Flight Flight);
+        Task<int> Update(Flight Flight);
+        Task<int> AddOrUpdate(Flight Flight);
+        Task<int> Delete(Flight Flight);
     }
 }

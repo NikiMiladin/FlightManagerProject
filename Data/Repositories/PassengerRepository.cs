@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Data.Repositories;
 using Data.Entity;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -21,33 +22,33 @@ namespace Data.Repositories
                 return _dbContext.Passengers;
             }
         }
-        public int Add(Passenger passenger)
+        public async Task<int> Add(Passenger passenger)
         {
-            _dbContext.Passengers.Add(passenger);
-            _dbContext.Reservations.Add(passenger.Reservation);
-            return _dbContext.SaveChanges();
+            await _dbContext.Passengers.AddAsync(passenger);
+            await _dbContext.Reservations.AddAsync(passenger.Reservation);
+            return await _dbContext.SaveChangesAsync();
         }
-        public int Update(Passenger passenger)
+        public async Task<int> Update(Passenger passenger)
         {
             _dbContext.Passengers.Update(passenger);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
 
         }
-        public int AddOrUpdate(Passenger passenger)
+        public async Task<int> AddOrUpdate(Passenger passenger)
         {
             if(passenger.Id == 0)
             {
-                return this.Add(passenger);
+                return await this.Add(passenger);
             }
             else
             {
-                return this.Update(passenger);
+                return await this.Update(passenger);
             }
         }
-        public int Delete(Passenger passenger)
+        public async Task<int> Delete(Passenger passenger)
         {
             _dbContext.Remove(passenger);
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
