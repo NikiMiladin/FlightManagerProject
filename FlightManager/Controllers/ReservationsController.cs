@@ -38,16 +38,6 @@ namespace FlightManager.Controllers
                 model.Flight = flight;
                 if (model.Flight.CapacityEconomyPassengers >= model.PassengersEconomyCount && model.Flight.CapacityBusinessPassengers >= model.PassengersBusinessCount)
                 {
-<<<<<<< HEAD
-                    Id = model.Id,
-                    FlightId = model.FlightId,
-                    Flight = model.Flight,
-                    Email = model.Email,
-                    PassengersCount = model.PassengersCount
-                };
-                await _reservationRepository.Add(reservation);
-                return RedirectToAction("AddPassengers", reservation.Id);
-=======
                     flight.CapacityEconomyPassengers -= model.PassengersEconomyCount;
                     flight.CapacityBusinessPassengers -= model.PassengersBusinessCount;
                     
@@ -61,9 +51,9 @@ namespace FlightManager.Controllers
                         Passengers=null
                     };
                     
-                    _reservationRepository.Add(reservation);
+                    await _reservationRepository.Add(reservation);
                     //flight.Reservations.Add(reservation);
-                    _flightRepository.Update(flight);
+                    await _flightRepository.Update(flight);
                     return RedirectToAction("AddPassengers", reservation);
                 }
                 else
@@ -71,7 +61,6 @@ namespace FlightManager.Controllers
                     //да изпишем на потребителя че няма толкова и такива свободни места, каквито желае
                     return NotFound(); //засега поне
                 }
->>>>>>> main
             }
             return View(model);
         }
@@ -104,10 +93,6 @@ namespace FlightManager.Controllers
                     TicketType = model.TicketType
                 };
                 await _passengerRepository.Add(passenger);
-<<<<<<< HEAD
-            }//kolko puti i kak shte se izpulnqva, nakude da vodi???
-            return View(model);
-=======
                 reservation.Passengers.Add(passenger);
                 await _reservationRepository.Update(reservation);
                 if(reservation.Passengers.Count==(economyCount+businessCount))
@@ -115,7 +100,6 @@ namespace FlightManager.Controllers
                 return RedirectToAction("AddPassengers", reservation);
             }
             return View("Index","FlightList");
->>>>>>> main
         }
         public IActionResult Index()
         {
