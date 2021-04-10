@@ -24,9 +24,12 @@ namespace Data.Repositories
         public async Task<int> Add(Reservation reservation)
         {
             await _dbContext.Reservations.AddAsync(reservation);
-            foreach (var passenger in reservation.Passengers)
+            if(reservation.Passengers!=null)
             {
-                await _dbContext.Passengers.AddAsync(passenger);
+                foreach (var passenger in reservation.Passengers)
+                {
+                    await _dbContext.Passengers.AddAsync(passenger);
+                }
             }
             return await _dbContext.SaveChangesAsync();
         }

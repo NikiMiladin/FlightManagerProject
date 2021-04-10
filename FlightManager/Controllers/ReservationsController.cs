@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data;
 using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
@@ -11,31 +12,20 @@ namespace FlightManager.Controllers
 {
     public class ReservationsController : Controller
     {
+        private readonly IFlightRepository _flightRepository;
         private readonly IReservationRepository _reservationRepository;
-        private static IFlightRepository _flightRepository;
         private readonly IPassengerRepository _passengerRepository;
 
-        public ReservationsController(IReservationRepository reservationRepository,
-            IFlightRepository flightRepository, IPassengerRepository passengerRepository)
+        public ReservationsController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IPassengerRepository passengerRepository)
         {
-            _reservationRepository = reservationRepository;
             _flightRepository = flightRepository;
+            _reservationRepository = reservationRepository;
             _passengerRepository = passengerRepository;
         }
         [HttpGet]
-        public IActionResult Add(int flightId)
+        public IActionResult Add(int id)
         {
-            Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == flightId);
             ReservationsViewModel model = new ReservationsViewModel();
-            model.FlightId = flight.Id;
-            model.Flight = flight;
-            /*{
-                FlightId = flight.Id,
-                Flight = flight,
-                Email = "",
-                PassengersCount = 0,
-                Passengers = null
-            };*/
             return View(model);
         }
         [HttpPost]
@@ -43,38 +33,56 @@ namespace FlightManager.Controllers
         {
             if(ModelState.IsValid)
             {
-                Reservation reservation = new Reservation()
+                Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == model.Id);
+                model.FlightId = flight.Id;
+                model.Flight = flight;
+                if (model.Flight.CapacityEconomyPassengers >= model.PassengersEconomyCount && model.Flight.CapacityBusinessPassengers >= model.PassengersBusinessCount)
                 {
-                    Id = model.Id,
-                    FlightId = model.FlightId,
-                    Flight = model.Flight,
-                    Email = model.Email,
-                    PassengersCount = model.PassengersCount
-                };
-                _reservationRepository.Add(reservation);
-                return RedirectToAction("AddPassengers", reservation.Id);
+                    flight.CapacityEconomyPassengers -= model.PassengersEconomyCount;
+                    flight.CapacityBusinessPassengers -= model.PassengersBusinessCount;
+                    
+                    Reservation reservation = new Reservation()
+                    {
+                        FlightId = model.FlightId,
+                        Flight = flight,
+                        Email = model.Email,
+                        PassengersEconomyCount = model.PassengersEconomyCount,
+                        PassengersBusinessCount = model.PassengersBusinessCount,
+                        Passengers=null
+                    };
+                    
+                    _reservationRepository.Add(reservation);
+                    //flight.Reservations.Add(reservation);
+                    _flightRepository.Update(flight);
+                    return RedirectToAction("AddPassengers", reservation);
+                }
+                else
+                {
+                    //да изпишем на потребителя че няма толкова и такива свободни места, каквито желае
+                    return NotFound(); //засега поне
+                }
             }
             return View(model);
         }
         [HttpGet]
-        public IActionResult AddPassengers(int reservationId)
+        public IActionResult AddPassengers(Reservation reservation)
         {
-            Reservation reservation = _reservationRepository.Items.SingleOrDefault(item => item.Id == reservationId);
-            PassengerViewModel model = new PassengerViewModel()
-            {
-                ReservationId = reservation.Id,
-                Reservation = reservation
-            };
+            PassengerViewModel model = new PassengerViewModel();
             return View(model);
+            
         }
         [HttpPost]
-        public IActionResult AddPassengers(PassengerViewModel model)
+        public async Task<IActionResult> AddPassengers(PassengerViewModel model)
         {
             if (ModelState.IsValid)
             {
+                Reservation reservation = _reservationRepository.Items.SingleOrDefault(item => item.Id == model.Id);
+                model.Reservation = reservation;
+                model.ReservationId = reservation.Id;
+                int businessCount = reservation.PassengersBusinessCount;
+                int economyCount = reservation.PassengersEconomyCount;
                 Passenger passenger = new Passenger
                 {
-                    Id = model.Id,
                     ReservationId = model.ReservationId,
                     Reservation = model.Reservation,
                     FirstName = model.FirstName,
@@ -84,9 +92,14 @@ namespace FlightManager.Controllers
                     PhoneNumber = model.PhoneNumber,
                     TicketType = model.TicketType
                 };
-                _passengerRepository.Add(passenger);
-            }//kolko puti i kak shte se izpulnqva, nakude da vodi???
-            return View(model);
+                await _passengerRepository.Add(passenger);
+                reservation.Passengers.Add(passenger);
+                await _reservationRepository.Update(reservation);
+                if(reservation.Passengers.Count==(economyCount+businessCount))
+                    return View("./Index", "FlightList");
+                return RedirectToAction("AddPassengers", reservation);
+            }
+            return View("Index","FlightList");
         }
         public IActionResult Index()
         {

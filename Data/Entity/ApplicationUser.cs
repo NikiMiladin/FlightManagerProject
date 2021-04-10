@@ -6,7 +6,7 @@ namespace Data.Entity
     {
         public string FirstName { get; set;}
         public string LastName { get; set;}
-        public int EGN { get; set;}
+        public string EGN { get; set;}
         public string Address { get; set;}
     }
     

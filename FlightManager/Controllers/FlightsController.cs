@@ -38,6 +38,7 @@ namespace FlightManager.Controllers
         }
         public IActionResult Index(FlightListViewModel model)
         {
+            
             IQueryable<Flight> flights = _flightRepository.Items;
             flights.OrderBy(item => item.Id);
             model.Items = flights.Select(item => new FlightViewModel()
