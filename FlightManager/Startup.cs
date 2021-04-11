@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightManager.MappingProfile;
 using Data;
 using Data.Repositories;
 using Data.Entity;
@@ -46,7 +47,9 @@ namespace FlightManager
                 options.LogoutPath = "/Account/Logout"; 
                 options.AccessDeniedPath = "/Account/AccessDenied"; 
             });
-
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
            // services.AddTransient<FlightDbContextSeedData>();
         }
 
