@@ -1,0 +1,23 @@
+@using Microsoft.AspNetCore.Identity
+@using Data.Entity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a asp-controller="Account" asp-action="Index" title="Manage" class="nav-link text-dark">Hello @UserManager.GetUserAsync(User).Result.FirstName</a>
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="Logout" title="Log off" class="nav-link text-dark">Log off</a>
+            </li>
+        </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-controller="Account" asp-action="Login" class="nav-link text-dark">Log in</a></li>
+    </ul>
+}

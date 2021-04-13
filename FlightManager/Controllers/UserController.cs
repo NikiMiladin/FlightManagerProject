@@ -7,24 +7,40 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 
 namespace FlightManager.Controllers
 {
+    //[Authorize(Roles = "Administrator")]
     public class UserController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
+        private IMapper _mapper;
  
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
  
-        public IActionResult Index()
+        public async Task<IActionResult> Index(ICollection<UserViewModel> userModels)
         {
-            return View(_userManager.Users);
+            IEnumerable<ApplicationUser> users = _userManager.Users.OrderBy(user => user.UserName).ToList();
+            foreach (var user in users)
+            {   
+                UserViewModel userModel = _mapper.Map<UserViewModel>(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                if(roles.Any(role => role == "Administrator"))
+                {
+                    userModel.IsAdmin = true;
+                }
+               userModels.Add(userModel);
+            }
+            return View(userModels);
         }
         public ViewResult Create() => View();
         [HttpPost]
@@ -39,36 +55,14 @@ namespace FlightManager.Controllers
                     EGN = user.EGN,
                     Address = user.Address,
                     Email= user.Email,
-                    PhoneNumber = user.PhoneNumber
+                    PhoneNumber = user.PhoneNumber,
+                    IsEmployed = true
                 };
                 IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
                 if(result.Succeeded)
                 {   
-                    if(_userManager.GetUsersInRoleAsync("Administrator").Result.Count() == 0)
-                    {
-                        result = await _userManager.AddToRoleAsync(appUser,"Administrator");
-                        if(result.Succeeded)
-                        {return RedirectToAction("Index");}
-                        else
-                        {
-                            foreach (IdentityError error in result.Errors){
-                                ModelState.AddModelError("", error.Description);
-                                }
-                        }                    
-                    }
-                    else 
-                    {
-                        await _userManager.AddToRoleAsync(appUser,"Employee");
-                        if(result.Succeeded)
-                        {return RedirectToAction("Index");}
-                        else
-                        {
-                            foreach (IdentityError error in result.Errors){
-                                ModelState.AddModelError("", error.Description);
-                                }     
-                        }   
-                    }
-               }
+                    return RedirectToAction("Index");                 
+                }
                 else
                 {
                     foreach (IdentityError error in result.Errors){
@@ -131,20 +125,28 @@ namespace FlightManager.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete (string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            if(user != null)
+            {
+            user.IsEmployed = false;
+            await _userManager.UpdateAsync(user);
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteRecord(string id)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                    return RedirectToAction("Index");
-                //else
-                   // Errors(result);
+                await _userManager.DeleteAsync(user);
+                return RedirectToAction("Index");
             }
             else
                 ModelState.AddModelError("", "User Not Found");
-            return View("Index", _userManager.Users);
+             return RedirectToAction("Index");
         }
     }
 }

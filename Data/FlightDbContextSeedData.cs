@@ -6,44 +6,22 @@ namespace Data
 {
     public static class FlightDbContextSeedData
     {
-
-/*        FlightDb _dbContext;
-
-        RoleManager<IdentityRole> _roleManager;
-
-        public FlightDbContextSeedData(FlightDb dbContext, RoleManager<IdentityRole> roleManager)
+        public static void SeedAdmin(RoleManager<IdentityRole> roleManager,UserManager<ApplicationUser> userManager,string adminUsername,string adminPassword)
         {
-            _dbContext = dbContext;
-            _roleManager = roleManager;
-        }
-        
-        public async void SeedRoles()
-        {
-            IdentityResult result;
-            if( _roleManager.Roles.ElementType)
-            {
-               result = await _roleManager.CreateAsync(new IdentityRole("Administrator"));
-            }
-            if(!await _roleManager.RoleExistsAsync("Employee"))
-            {
-               await _roleManager.CreateAsync(new IdentityRole("Employee"));
-            }
-            await _dbContext.SaveChangesAsync();
-
-        }*/
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
-        {
-            if (!roleManager.RoleExistsAsync("Employee").Result)
-            {
-                IdentityRole role = new IdentityRole();
-                role.Name = "Employee";
-                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
-            }
             if (!roleManager.RoleExistsAsync("Administrator").Result)
             {
                 IdentityRole role = new IdentityRole();
                 role.Name = "Administrator";
                 IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+            }
+            if (userManager.GetUsersInRoleAsync("Administrator").Result.Count == 0)
+            {
+                ApplicationUser admin = new ApplicationUser(){
+                    UserName = adminUsername,
+                    IsEmployed = true
+                    };
+                userManager.CreateAsync(admin,adminPassword).Wait();
+                userManager.AddToRoleAsync(admin,"Administrator").Wait();
             }
         }
 

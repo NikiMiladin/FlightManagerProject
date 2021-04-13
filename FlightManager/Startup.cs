@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlightManager
@@ -38,7 +39,12 @@ namespace FlightManager
             services.AddIdentity<ApplicationUser,IdentityRole>()
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
-        
+        //    services.AddAuthorization(options =>
+        //    {
+        //        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        //            .RequireAuthenticatedUser()
+        //            .Build();
+        //    });
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
@@ -54,7 +60,7 @@ namespace FlightManager
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -74,7 +80,7 @@ namespace FlightManager
             app.UseAuthentication();
             app.UseAuthorization();
 
-            Data.FlightDbContextSeedData.SeedRoles(roleManager);
+            Data.FlightDbContextSeedData.SeedAdmin(roleManager,userManager,"ADMINISTRATOR","P@ssw0rd");
             
             app.UseEndpoints(endpoints =>
             {

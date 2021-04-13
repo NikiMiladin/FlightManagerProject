@@ -1,24 +1,44 @@
-@using Data.Entity;
-@model IEnumerable<ApplicationUser>
+@model IEnumerable<UserViewModel>
   
 <h1 class="bg-info text-white">All Users</h1>
 <a href="@Url.Action("Create","User")" class="btn btn-success">Create a User</a>
   
-<table class="table table-sm table-bordered">
-    <tr><th>ID</th><th>Name</th><th>Email</th></tr>
-    @foreach (ApplicationUser user in Model)
+<table class="table table-sm table-bordered table-hover">
+    <tr><th>Username</th><th>Full Name</th><th>Email</th><th>EGN</th><th>Phone Number</th><th>Adress</th><th>Employed</th><th></th><th></th></tr>
+    @foreach (UserViewModel user in Model)
     {
     <tr>
-        <td>@user.Id</td>
         <td>@user.UserName</td>
-        <td>@user.FirstName</td>
-        <td>@user.LastName</td>
-        <td>@user.EGN</td>
+        <td>@user.FullName</td>
         <td>@user.Email</td>
+        <td>@user.EGN</td>
         <td>@user.PhoneNumber</td>
         <td>@user.Address</td>
+        <td>
+            @if(user.IsEmployed)
+            {
+                <i class="fas fa-check icon-green"></i>
+            }
+            else
+            {
+                <i class="fas fa-times icon-red"></i>
+            }
+        </td>
         <td><a href="@Url.Action("Edit","User", new {Id = user.Id})" class="btn btn-success">Update</a></td>
-        <td><a href="@Url.Action("Delete","User", new {Id = user.Id})" class="btn btn-success">Delete</a></td>
+        <td>
+            @if(user.IsAdmin)
+            {
+                <button class="btn btn-danger disabled">Delete</button>
+            }
+            else if(user.IsEmployed)
+            {
+                <a href="@Url.Action("Delete","User", new {Id = user.Id})" class="btn btn-danger">Delete</a>
+            }
+            else if(!user.IsEmployed)
+            {
+                <a href="@Url.Action("DeleteRecord","User", new {Id = user.Id})" class="btn btn-danger">Delete Record</a>
+            }
+        </td>
     </tr>
     }
 </table>
