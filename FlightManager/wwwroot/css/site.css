@@ -69,3 +69,10 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.icon-green {
+  color:#66ff66
+}
+.icon-red  {
+  color: #ff3333;
+}
