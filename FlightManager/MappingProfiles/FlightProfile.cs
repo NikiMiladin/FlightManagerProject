@@ -10,6 +10,8 @@ namespace FlightManager.MappingProfile
         public FlightProfile()
         {
             CreateMap<Flight,FlightViewModel>();
+            CreateMap<Flight, FlightAdminViewModel>()
+                .ReverseMap();
         }
     }
 

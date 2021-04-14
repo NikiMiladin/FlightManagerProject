@@ -2,6 +2,7 @@
 @model ReservationsViewModel
     <div class="container">
         <form asp-action="Add" asp-controller="Reservations" method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
             @using (Html.BeginForm("Add", "Reservations", FormMethod.Post,
       new { @class = "" }))
             {

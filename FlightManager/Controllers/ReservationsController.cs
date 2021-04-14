@@ -58,8 +58,8 @@ namespace FlightManager.Controllers
                 }
                 else
                 {
+                    ModelState.AddModelError("","There isn't enough space");
                     //да изпишем на потребителя че няма толкова и такива свободни места, каквито желае
-                    return NotFound(); //засега поне
                 }
             }
             return View(model);
@@ -90,16 +90,18 @@ namespace FlightManager.Controllers
                     LastName = model.LastName,
                     EGN = model.EGN,
                     PhoneNumber = model.PhoneNumber,
-                    TicketType = model.TicketType
+                    IsBusiness = model.IsBusiness
                 };
                 await _passengerRepository.Add(passenger);
                 reservation.Passengers.Add(passenger);
                 await _reservationRepository.Update(reservation);
                 if(reservation.Passengers.Count==(economyCount+businessCount))
-                    return View("./Index", "FlightList");
+                {
+                    return RedirectToAction("Index", "Flights");
+                }
                 return RedirectToAction("AddPassengers", reservation);
             }
-            return View("Index","FlightList");
+            return RedirectToAction("Index", "Flights");
         }
         public IActionResult Index()
         {

@@ -16,7 +16,7 @@ namespace Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Data.Entity.ApplicationUser", b =>
@@ -151,6 +151,9 @@ namespace Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsBusiness")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -162,9 +165,6 @@ namespace Data.Migrations
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("TicketType")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
