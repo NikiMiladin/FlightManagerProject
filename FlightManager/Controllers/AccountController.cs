@@ -110,19 +110,19 @@ namespace FlightManager.Controllers
             {
                 return View(model);
             }
-            var user = await _userManager.GetUserAsync(User);
-            if (user != null)
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
-                var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("Index","Account");
-                }
-                AddErrors(result);
-                return View(model);
-            }
                 return RedirectToAction("Index","Home");
+            }
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                return RedirectToAction("Index","Account");
+            }
+            AddErrors(result);
+            return View(model);
         }
         private void AddErrors(IdentityResult result)
         {
