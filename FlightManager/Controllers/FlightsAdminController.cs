@@ -55,7 +55,8 @@ namespace FlightManager.Controllers
             Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
             if (flight == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction("Index"); //trqbva mi vtoro mnenie
             }
             else
             {
@@ -66,10 +67,13 @@ namespace FlightManager.Controllers
         
         
         [Authorize]
-        public IActionResult Index(FlightIndexViewModel model)
+        public IActionResult Index(FlightAdminListViewModel model)
         {
-            IQueryable<Flight> flights = _flightRepository.Items;
-            flights.OrderBy(item => item.Id);
+            ICollection<Flight> flights = _flightRepository.Items
+                                                        .OrderBy(item => item.Id)
+                                                        .ToList();
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
+            /*flights.OrderBy(item => item.Id);
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
@@ -82,7 +86,7 @@ namespace FlightManager.Controllers
                 PilotName = item.PilotName,
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });
+            });*/
             return View(model);
         }
     }

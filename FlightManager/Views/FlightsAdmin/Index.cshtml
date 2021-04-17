@@ -1,53 +1,57 @@
-﻿@model FlightIndexViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using Data.Entity
+@inject UserManager<ApplicationUser> UserManager
+@model FlightAdminListViewModel
 @{ 
     ViewData["Title"] = "Flights";
 }
 <h1>Flights</h1>
-<div class="container-fluid border-bottom">
-    <div class="card-header d-flex">
-        <div class="col-2">
-            <a href="@Url.Action("Edit","FlightsAdmin")" class="btn btn-success">Add</a>
+<div class="container-fluid">
+        <div class="card-header d-flex">
+            <div class="col-2">
+                <a href="@Url.Action("Edit","FlightsAdmin")" class="btn btn-success">Add</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table-responsive table table-bordered table-striped col-12">
+                <thead>
+                    <th>Id</th>
+                    <th>Departure City</th>
+                    <th>Arrival City</th>
+                    <th>Departure Time</th>
+                    <th>Flight Duration</th>
+                    <th>Plane Model</th>
+                    <th>Plane Id</th>
+                    <th>Pilot Name</th>
+                    <th>Economy Passengers Capacity</th>
+                    <th>Business Passengers Capacity</th>
+                    <th>Reservations</th>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.DepartureCity</td>
+                            <td>@item.ArrivalCity</td>
+                            <td>@item.DepartureTime</td>
+                            <td>@item.FlightDuration</td>
+                            <td>@item.PlaneModel</td>
+                            <td>@item.PlaneID</td>
+                            <td>@item.PilotName</td>
+                            <td>@item.CapacityEconomyPassengers</td>
+                            <td>@item.CapacityBusinessPassengers</td>
+                            <td>
+                                <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                                @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
+                                {
+                                    <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
+                                    <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="card-body">
-        <table class="table-responsive table table-bordered table-striped col-12">
-            <thead>
-                <th>Id</th>
-                <th>Departure City</th>
-                <th>Arrival City</th>
-                <th>Departure Time</th>
-                <th>Flight Duration</th>
-                <th>Plane Model</th>
-                <th>Plane Id</th>
-                <th>Pilot Name</th>
-                <th>Economy Passengers Capacity</th>
-                <th>Business Passengers Capacity</th>
-                <th>Reservations</th>
-            </thead>
-            <tbody>
-                @foreach(var item in Model.Items)
-                {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.DepartureCity</td>
-                        <td>@item.ArrivalCity</td>
-                        <td>@item.DepartureTime</td>
-                        <td>@item.FlightDuration</td>
-                        <td>@item.PlaneModel</td>
-                        <td>@item.PlaneID</td>
-                        <td>@item.PilotName</td>
-                        <td>@item.CapacityEconomyPassengers</td>
-                        <td>@item.CapacityBusinessPassengers</td>
-                        <td>
-                            <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
-                            <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>

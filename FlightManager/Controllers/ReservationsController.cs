@@ -161,6 +161,7 @@ namespace FlightManager.Controllers
                 {
                     return RedirectToAction("AddPassengers", reservation);
                 }
+                return RedirectToAction("AddPassengers", reservation);
             }
             return RedirectToAction("Index", "Flights");
         }

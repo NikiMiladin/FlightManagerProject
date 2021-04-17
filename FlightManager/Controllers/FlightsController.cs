@@ -6,17 +6,21 @@ using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace FlightManager.Controllers
 {
     public class FlightsController : Controller
     {
         private readonly IFlightRepository _flightRepository;
+        private readonly IMapper _mapper;
 
-        public FlightsController(IFlightRepository flightRepository)
+        public FlightsController(IFlightRepository flightRepository,IMapper mapper)
         {
             _flightRepository = flightRepository;
+            _mapper = mapper;
         }
+        /*
         public IActionResult List(FlightIndexViewModel model)
         {
             IQueryable<Flight> flights = _flightRepository.Items;
@@ -35,10 +39,9 @@ namespace FlightManager.Controllers
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
             });
             return View(model);
-        }
+        }*/
         public IActionResult Index(FlightListViewModel model)
         {
-            
             IQueryable<Flight> flights = _flightRepository.Items;
             flights.OrderBy(item => item.Id);
             flights = flights.Where(item => item.DepartureTime > DateTime.Now 
@@ -52,7 +55,7 @@ namespace FlightManager.Controllers
                 ArrivalTime = item.ArrivalTime,
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            }) ;
+            });
             return View(model);
         }
     }

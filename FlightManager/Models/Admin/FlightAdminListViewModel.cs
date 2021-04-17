@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace FlightManager.Models
 {
-    public class FlightIndexViewModel
+    public class FlightAdminListViewModel
     {
-        public IQueryable<FlightAdminViewModel> Items { get; set; }
+        public ICollection<FlightAdminViewModel> Items { get; set; }
+
+        
     }
 }
