@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <script src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+    <!--<script src="js/jquery-2.1.4.min.js"></script>-->
+  <!--  <script src="js/bootstrap.min.js"></script> -->
+    <!--<script src="~/lib/jquery/dist/jquery.min.js"></script> -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script defer src="~/lib/font-awesome/js/all.min.js"></script>
@@ -86,15 +86,11 @@
                             </div>
                         </div>
                     </li>
-                    <li class=" nav-item">
-                        <div>
-                             @await Html.PartialAsync("_LoginPartial")
-                        </div>
-                    </li>
                 </ul>
             </div>
            </div>
         </div>
+        @await Html.PartialAsync("_LoginPartial")
     </nav>
   </header>
 

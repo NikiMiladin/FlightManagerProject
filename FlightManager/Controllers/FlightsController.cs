@@ -21,7 +21,7 @@ namespace FlightManager.Controllers
             _reservationRepository = reservationRepository;
             _mapper = mapper;
         }
-        public IActionResult List(FlightIndexViewModel model)
+        public IActionResult List(FlightAdminListViewModel model)
         {
             model.Pager = model.Pager ?? new Models.PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
@@ -75,7 +75,7 @@ namespace FlightManager.Controllers
                     LastName = pass.LastName,
                     EGN = pass.EGN,
                     PhoneNumber = pass.PhoneNumber,
-                    TicketType = pass.TicketType
+                    IsBusiness = pass.IsBusiness
                 })
             };
             return View(model);
@@ -173,7 +173,7 @@ namespace FlightManager.Controllers
             flights = flights.OrderBy(item => item.Id)
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
-            model.Items = _mapper.Map<ICollection<FlightViewModel>>(flights);       
+            model.Items = _mapper.Map<ICollection<FlightViewModel>>(flights).AsQueryable();       
             return View(model);
         }
     }

@@ -99,7 +99,7 @@ namespace FlightManager.Controllers
                     MiddleName = pass.MiddleName, 
                     LastName = pass.LastName,
                 EGN = pass.EGN, PhoneNumber = pass.PhoneNumber,
-                    TicketType = pass.TicketType })
+                    IsBusiness = pass.IsBusiness })
             };
             return View(model);
         }
@@ -185,7 +185,7 @@ namespace FlightManager.Controllers
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
             
-            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights).AsQueryable();
             /*flights.OrderBy(item => item.Id);
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {

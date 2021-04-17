@@ -27,8 +27,8 @@ new { @class = "" }))
             @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { placeholder = "Phone number", @class = "form-control" } })
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.TicketType, "Ticket type - Business / Economy")
-            @Html.EditorFor(model => model.TicketType, new { htmlAttributes = new { placeholder = "Ticket type", @class = "form-control" } })
+            @Html.LabelFor(model => model.IsBusiness, "Ticket type - Business / Economy")
+            @Html.EditorFor(model => model.IsBusiness, new { htmlAttributes = new { placeholder = "Ticket type", @class = "form-control" } })
         </div>
         <input type="submit" value="Save" class="btn btn-primary" />
     }
