@@ -7,16 +7,19 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+
 namespace FlightManager.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class FlightsAdminController : Controller
     {
         private readonly IFlightRepository _flightRepository;
-
-        public FlightsAdminController(IFlightRepository flightRepository)
+        private readonly IMapper _mapper;
+        public FlightsAdminController(IFlightRepository flightRepository, IMapper mapper)
         {
             _flightRepository = flightRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -25,6 +28,8 @@ namespace FlightManager.Controllers
             FlightAdminViewModel model;
             if (flight != null)
             {
+                model = _mapper.Map<FlightAdminViewModel>(flight);
+                /*
                 model = new FlightAdminViewModel()
                 {
                     Id = flight.Id,
@@ -38,6 +43,7 @@ namespace FlightManager.Controllers
                     CapacityEconomyPassengers = flight.CapacityEconomyPassengers,
                     CapacityBusinessPassengers = flight.CapacityBusinessPassengers
                 };
+                */
             }
             else
             {
@@ -52,8 +58,9 @@ namespace FlightManager.Controllers
             {
                 return View(model);
             }
-
-            await _flightRepository.AddOrUpdate(new Flight()
+            Flight flight = _mapper.Map<Flight>(model);
+            await _flightRepository.AddOrUpdate(flight);
+            /*await _flightRepository.AddOrUpdate(new Flight()
             {
                 Id = model.Id,
                 DepartureCity = model.DepartureCity,
@@ -66,7 +73,7 @@ namespace FlightManager.Controllers
                 CapacityEconomyPassengers = model.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = model.CapacityBusinessPassengers,
                 Reservations = null
-            });
+            });*/
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -75,7 +82,8 @@ namespace FlightManager.Controllers
             Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
             if (flight == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction("Index"); //trqbva mi vtoro mnenie
             }
             else
             {
@@ -84,10 +92,13 @@ namespace FlightManager.Controllers
             }
         }
         [Authorize]
-        public IActionResult Index(FlightIndexViewModel model)
+        public IActionResult Index(FlightAdminListViewModel model)
         {
-            IQueryable<Flight> flights = _flightRepository.Items;
-            flights.OrderBy(item => item.Id);
+            ICollection<Flight> flights = _flightRepository.Items
+                                                        .OrderBy(item => item.Id)
+                                                        .ToList();
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
+            /*flights.OrderBy(item => item.Id);
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
@@ -100,7 +111,7 @@ namespace FlightManager.Controllers
                 PilotName = item.PilotName,
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });
+            });*/
             return View(model);
         }
     }

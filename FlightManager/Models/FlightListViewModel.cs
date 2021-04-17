@@ -7,6 +7,8 @@ namespace FlightManager.Models
 {
     public class FlightListViewModel
     {
-        public IQueryable<FlightViewModel> Items { get; set; }
+        public ICollection<FlightViewModel> Items { get; set; }
+
+
     }
 }

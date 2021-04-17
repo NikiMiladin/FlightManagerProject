@@ -12,6 +12,6 @@ namespace Data.Entity
         public string LastName { get; set;}
         public string EGN { get; set;}
         public string PhoneNumber { get; set;}
-        public bool TicketType { get; set; } // true - business, false - economy
+        public bool IsBusiness { get; set; } // true - business, false - economy
     }
 }

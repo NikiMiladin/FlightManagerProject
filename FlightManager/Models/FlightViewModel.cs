@@ -19,5 +19,7 @@ namespace FlightManager.Models
                 return ArrivalTime.Subtract(DepartureTime);
             }
         }
+
+        
     }
 }

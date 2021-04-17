@@ -30,8 +30,7 @@ namespace FlightManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<FlightDb>(options =>
-                options.UseSqlServer("DefaultConnection"));
+            services.AddDbContext<FlightDb>();
             services.AddControllersWithViews();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
