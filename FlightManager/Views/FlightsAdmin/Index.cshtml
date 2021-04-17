@@ -2,9 +2,11 @@
 @using Data.Entity
 @inject UserManager<ApplicationUser> UserManager
 @model FlightAdminListViewModel
+@{ 
+    ViewData["Title"] = "Flights";
+}
 <h1>Flights</h1>
 <div class="container-fluid">
-    <div class="card">
         <div class="card-header d-flex">
             <div class="col-2">
                 <a href="@Url.Action("Edit","FlightsAdmin")" class="btn btn-success">Add</a>
@@ -24,7 +26,7 @@
                     <th>Economy Passengers Capacity</th>
                     <th>Business Passengers Capacity</th>
                     <th>Reservations</th>
-                </th>
+                </thead>
                 <tbody>
                     @foreach(var item in Model.Items)
                     {
@@ -53,4 +55,3 @@
             </table>
         </div>
     </div>
-</div>

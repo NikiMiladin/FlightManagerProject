@@ -38,12 +38,6 @@ namespace FlightManager
             services.AddIdentity<ApplicationUser,IdentityRole>()
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
-        //    services.AddAuthorization(options =>
-        //    {
-        //        options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        //            .RequireAuthenticatedUser()
-        //            .Build();
-        //    });
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
@@ -54,8 +48,6 @@ namespace FlightManager
             });
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-           
-           // services.AddTransient<FlightDbContextSeedData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,6 +16,20 @@ namespace FlightManager.Models
         public string LastName { get; set; }
         public string EGN { get; set; }
         public string PhoneNumber { get; set; }
-        public bool IsBusiness { get; set; }
+        public bool IsBusiness
+        {
+            get
+            {
+                if (TicketType == Ticket.Business)
+                    return true;
+                else return false;
+            }
+        }
+        public Ticket TicketType { get; set; }
+    }
+    public enum Ticket
+    {
+        Business,
+        Economy
     }
 }

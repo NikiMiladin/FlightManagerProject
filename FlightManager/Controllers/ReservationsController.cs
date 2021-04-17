@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Data;
 using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FlightManager.Controllers
 {
@@ -15,12 +17,17 @@ namespace FlightManager.Controllers
         private readonly IFlightRepository _flightRepository;
         private readonly IReservationRepository _reservationRepository;
         private readonly IPassengerRepository _passengerRepository;
+        private readonly IMapper _mapper;
 
-        public ReservationsController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IPassengerRepository passengerRepository)
+        public ReservationsController(IFlightRepository flightRepository, 
+            IReservationRepository reservationRepository,
+            IPassengerRepository passengerRepository,
+            IMapper mapper)
         {
             _flightRepository = flightRepository;
             _reservationRepository = reservationRepository;
             _passengerRepository = passengerRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult Add(int id)
@@ -38,9 +45,6 @@ namespace FlightManager.Controllers
                 model.Flight = flight;
                 if (model.Flight.CapacityEconomyPassengers >= model.PassengersEconomyCount && model.Flight.CapacityBusinessPassengers >= model.PassengersBusinessCount)
                 {
-                    flight.CapacityEconomyPassengers -= model.PassengersEconomyCount;
-                    flight.CapacityBusinessPassengers -= model.PassengersBusinessCount;
-                    
                     Reservation reservation = new Reservation()
                     {
                         FlightId = model.FlightId,
@@ -52,14 +56,27 @@ namespace FlightManager.Controllers
                     };
                     
                     await _reservationRepository.Add(reservation);
-                    //flight.Reservations.Add(reservation);
                     await _flightRepository.Update(flight);
+                    
                     return RedirectToAction("AddPassengers", reservation);
                 }
                 else
                 {
-                    ModelState.AddModelError("","There isn't enough space");
                     //да изпишем на потребителя че няма толкова и такива свободни места, каквито желае
+                    if (model.Flight.CapacityEconomyPassengers < model.PassengersEconomyCount && 
+                        model.Flight.CapacityBusinessPassengers < model.PassengersBusinessCount)
+                    {
+                        ViewData["Message"] = "This flight does not have this much free economy and business seats";
+                    }
+                    else if(model.Flight.CapacityBusinessPassengers < model.PassengersBusinessCount)
+                    {
+                        ViewData["Message"] = "This flight does not have this much free business seats";
+                    }
+                    else if(model.Flight.CapacityEconomyPassengers < model.PassengersEconomyCount)
+                    {
+                        ViewData["Message"] = "This flight does not have this much free economy seats";
+                    }
+                    return View(model);
                 }
             }
             return View(model);
@@ -67,7 +84,38 @@ namespace FlightManager.Controllers
         [HttpGet]
         public IActionResult AddPassengers(Reservation reservation)
         {
+            Reservation r = _reservationRepository.Items.SingleOrDefault(item => item.Id == reservation.Id);
             PassengerViewModel model = new PassengerViewModel();
+            int businessSeats = r.PassengersBusinessCount;
+            int economySeats = r.PassengersEconomyCount;
+            int businessTicket = 0;
+            int economyTicket = 0;
+            if (r.Passengers!=null)
+            {
+                foreach (var item in r.Passengers)
+                {
+                    if (item.IsBusiness) businessTicket++;
+                    else economyTicket++;
+                }
+                businessSeats -= businessTicket;
+                economySeats -= economyTicket;
+            }
+            
+            if (businessSeats == 0)
+            {
+                List<string> list = new List<string> { "Economy" };
+                ViewBag.TicketsType = new SelectList(list);
+            }
+            else if (economySeats == 0)
+            {
+                List<string> list = new List<string> { "Business" };
+                ViewBag.TicketsType = new SelectList(list);
+            }
+            else
+            {
+                List<string> list = new List<string> { "Business" , "Economy"};
+                ViewBag.TicketsType = new SelectList(list);
+            }
             return View(model);
             
         }
@@ -77,6 +125,7 @@ namespace FlightManager.Controllers
             if (ModelState.IsValid)
             {
                 Reservation reservation = _reservationRepository.Items.SingleOrDefault(item => item.Id == model.Id);
+                Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == reservation.FlightId);
                 model.Reservation = reservation;
                 model.ReservationId = reservation.Id;
                 int businessCount = reservation.PassengersBusinessCount;
@@ -92,12 +141,25 @@ namespace FlightManager.Controllers
                     PhoneNumber = model.PhoneNumber,
                     IsBusiness = model.IsBusiness
                 };
+                if(passenger.IsBusiness)
+                {
+                    flight.CapacityBusinessPassengers--;
+                }
+                else
+                {
+                    flight.CapacityEconomyPassengers--;
+                }
                 await _passengerRepository.Add(passenger);
                 reservation.Passengers.Add(passenger);
                 await _reservationRepository.Update(reservation);
-                if(reservation.Passengers.Count==(economyCount+businessCount))
+                await _flightRepository.Update(flight);
+                if (reservation.Passengers.Count == (economyCount + businessCount))
                 {
-                    return RedirectToAction("Index", "Flights");
+                    return View("SuccessfulReservation");
+                }
+                else
+                {
+                    return RedirectToAction("AddPassengers", reservation);
                 }
                 return RedirectToAction("AddPassengers", reservation);
             }

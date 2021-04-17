@@ -1,32 +1,36 @@
 ﻿@model FlightListViewModel
+@{
+    ViewData["Title"] = "Flights";
+}
 <h1>Flights</h1>
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <table class="table-responsive table table-bordered table-striped col-12">
-                <thead>
-                <th>Id</th>
+    <div class="card-body">
+        <table class="table-responsive table table-bordered table-striped col-12">
+            <thead>
                 <th>Departure City</th>
                 <th>Arrival City</th>
                 <th>Departure Time</th>
                 <th>Flight Duration</th>
+                <th>Free Economy Seats</th>
+                <th>Free Business Seats</th>
                 <th>Book Tickets</th>
-                <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.DepartureCity</td>
-                            <td>@item.ArrivalCity</td>
-                            <td>@item.DepartureTime</td>
-                            <td>@item.FlightDuration</td>
-                            <td>
-                                <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                    <td>@item.DepartureCity</td>
+                    <td>@item.ArrivalCity</td>
+                    <td>@item.DepartureTime</td>
+                    <td>@item.FlightDuration</td>
+                    <td>@item.CapacityEconomyPassengers</td>
+                    <td>@item.CapacityBusinessPassengers</td>
+                    <td>
+                        <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
+                    </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
