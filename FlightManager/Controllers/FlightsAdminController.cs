@@ -73,8 +73,8 @@ namespace FlightManager.Controllers
                                                         .OrderBy(item => item.Id)
                                                         .ToList();
             model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
-            /*flights.OrderBy(item => item.Id);
-            model.Items = flights.Select(item => new FlightAdminViewModel()
+            //flights.OrderBy(item => item.Id);
+            /*model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
                 DepartureCity = item.DepartureCity,

@@ -46,7 +46,8 @@ namespace FlightManager.Controllers
             flights.OrderBy(item => item.Id);
             flights = flights.Where(item => item.DepartureTime > DateTime.Now 
                 && (item.CapacityBusinessPassengers>0 || item.CapacityEconomyPassengers>0));
-            model.Items = flights.Select(item => new FlightViewModel()
+            model.Items = _mapper.Map<ICollection<FlightViewModel>>(flights);
+                /*flights.Select(item => new FlightViewModel()
             {
                 Id = item.Id,
                 DepartureCity = item.DepartureCity,
@@ -55,7 +56,7 @@ namespace FlightManager.Controllers
                 ArrivalTime = item.ArrivalTime,
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });
+            });*/
             return View(model);
         }
     }
