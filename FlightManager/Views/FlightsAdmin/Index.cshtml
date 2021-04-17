@@ -1,19 +1,34 @@
-﻿@using Microsoft.AspNetCore.Identity
+@model FlightAdminListViewModel
+@using Microsoft.AspNetCore.Identity
 @using Data.Entity
 @inject UserManager<ApplicationUser> UserManager
-@model FlightAdminListViewModel
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 @{ 
     ViewData["Title"] = "Flights";
 }
 <h1>Flights</h1>
 <div class="container-fluid">
         <div class="card-header d-flex">
+            @using (Html.BeginForm("Index", "FlightsAdmin", FormMethod.Get, new
+            {
+                @class = "navbar-search col-10"
+            }))
+            {
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Filter.PilotName, new {htmlAttribute = new { placeholder = "Pilot name" } })
+                </div>
+                <button class="btn btn-primary">
+                    Filter by pilot name
+                </button>
+            }
+        </div>
+        <div class="card-header d-flex">
             <div class="col-2">
                 <a href="@Url.Action("Edit","FlightsAdmin")" class="btn btn-success">Add</a>
             </div>
         </div>
         <div class="card-body">
-            <table class="table-responsive table table-bordered table-striped col-12">
+            <table class="w3-table-all">
                 <thead>
                     <th>Id</th>
                     <th>Departure City</th>
@@ -28,9 +43,9 @@
                     <th>Reservations</th>
                 </thead>
                 <tbody>
-                    @foreach(var item in Model.Items)
+                    @foreach (var item in Model.Items)
                     {
-                        <tr>
+                        <tr class="w3-hover-blue">
                             <td>@item.Id</td>
                             <td>@item.DepartureCity</td>
                             <td>@item.ArrivalCity</td>
@@ -41,7 +56,7 @@
                             <td>@item.PilotName</td>
                             <td>@item.CapacityEconomyPassengers</td>
                             <td>@item.CapacityBusinessPassengers</td>
-                            <td>
+                            <td>              
                                 <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
                                 @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
                                 {
@@ -54,4 +69,16 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.Pager.Pages; i++)
+                {
+                    <li class="page-item @(i==Model.Pager.CurrentPage ? "active": "")">
+                        <a asp-route-Filter.PilotName="@Model.Filter.PilotName"
+                           asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
+</div>

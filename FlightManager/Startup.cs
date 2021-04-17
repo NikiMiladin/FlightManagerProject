@@ -38,6 +38,13 @@ namespace FlightManager
             services.AddIdentity<ApplicationUser,IdentityRole>()
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
+            services.AddSession();
+            //    services.AddAuthorization(options =>
+            //    {
+            //        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //            .RequireAuthenticatedUser()
+            //            .Build();
+            //    });
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
@@ -67,6 +74,7 @@ namespace FlightManager
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

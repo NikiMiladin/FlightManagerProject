@@ -36,7 +36,7 @@ namespace FlightManager.Models
             {
                 yield return new ValidationResult("Invalid arrival time and date!");
             }
-            if (DepartureTime.Date < DateTime.Now.Date)
+            if (DepartureTime < DateTime.Now)
             {
                 yield return new ValidationResult("Invalid departure time and date!");
             }

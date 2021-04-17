@@ -2,35 +2,74 @@
 @{
     ViewData["Title"] = "Flights";
 }
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
 <div class="container-fluid">
-    <div class="card-body">
-        <table class="table-responsive table table-bordered table-striped col-12">
-            <thead>
-                <th>Departure City</th>
-                <th>Arrival City</th>
-                <th>Departure Time</th>
-                <th>Flight Duration</th>
-                <th>Free Economy Seats</th>
-                <th>Free Business Seats</th>
-                <th>Book Tickets</th>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Items)
-                {
-                    <tr>
-                    <td>@item.DepartureCity</td>
-                    <td>@item.ArrivalCity</td>
-                    <td>@item.DepartureTime</td>
-                    <td>@item.FlightDuration</td>
-                    <td>@item.CapacityEconomyPassengers</td>
-                    <td>@item.CapacityBusinessPassengers</td>
-                    <td>
-                        <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
-                    </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="card">
+        <div class="card-header d-flex">
+            @using (Html.BeginForm("Index", "Flights", FormMethod.Get, new
+            {
+                @class = "navbar-search col-10"
+            }))
+            {
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Filter.DepartureCity, new { htmlAttributes = new { placeholder = "Departure city" } })
+                </div>
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Filter.ArrivalCity, new { htmlAttributes = new { placeholder = "Arrival city" } })
+                </div>
+                <button class="btn btn-primary">
+                    Filter 
+                </button>
+            }
+        </div>
+
+
+            <div class="card-body">
+                <table class="w3-table-all">
+                    <thead>
+                    <th>Id</th>
+                    <th>Departure City</th>
+                    <th>Arrival City</th>
+                    <th>Departure Time</th>
+                    <th>Flight Duration</th>
+                    <th>Free Economy Seats</th>
+                    <th>Free Business Seats</th>
+                    <th>Book Tickets</th>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="w3-hover-blue">
+                                <td>@item.Id</td>
+                                <td>@item.DepartureCity</td>
+                                <td>@item.ArrivalCity</td>
+                                <td>@item.DepartureTime</td>
+                                <td>@item.FlightDuration</td>
+                                <td>@item.CapacityEconomyPassengers</td>
+                                <td>@item.CapacityBusinessPassengers</td>
+                                <td>
+                                    <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
+
+                                    @**<form asp-action="Add" asp-controller="Reservations" asp-route-id="@item.Id" method="get">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            Add Reservation
+                                        </button>
+                                    </form>**@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <ul class="pagination">
+                    @for (int i = 1; i <= Model.Pager.Pages; i++)
+                    {
+                        <li class="page-item @(i==Model.Pager.CurrentPage ? "active": "")">
+                            <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
-</div>

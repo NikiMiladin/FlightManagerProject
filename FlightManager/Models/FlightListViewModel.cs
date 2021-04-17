@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightManager.Models.Base;
+using FlightManager.Models.Filters;
 
 namespace FlightManager.Models
 {
-    public class FlightListViewModel
+    public class FlightListViewModel : BaseIndexViewModel
     {
-        public ICollection<FlightViewModel> Items { get; set; }
-
-
+        public IQueryable<FlightViewModel> Items { get; set; }
+        public FlightsFilterViewModel Filter { get; set; }
     }
 }

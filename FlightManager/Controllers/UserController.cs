@@ -7,6 +7,7 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using FlightManager.Models.Details;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 
@@ -25,8 +26,7 @@ namespace FlightManager.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
-        }
- 
+        }     
         public async Task<IActionResult> Index(ICollection<UserViewModel> userModels)
         {
             IEnumerable<ApplicationUser> users = _userManager.Users.OrderBy(user => user.UserName).ToList();
@@ -43,6 +43,7 @@ namespace FlightManager.Controllers
             return View(userModels);
         }
         public ViewResult Create() => View();
+       
         [HttpPost]
         public async Task<IActionResult> Create(UserViewModel model)
         {

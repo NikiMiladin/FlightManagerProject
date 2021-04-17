@@ -59,8 +59,21 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-image: url(plane.jpg);
+    background-size: cover;
+    font-family: "Roboto", sans-serif;
+}
+.header {
+    background-color: rgba(255,255,255,.6);
+    backdrop-filter: blur(5px)
+}
+
+
+.w3-bar-block .w3-bar-item {
+    padding: 16px;
+    font-weight: bold;
 }
 .footer {
   position: absolute;
@@ -69,7 +82,32 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.field-validation-error {
+    color: #b94a48;
+}
 
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+.btn {
+    width: 80px;
+}
 .icon-green {
   color:#66ff66
 }

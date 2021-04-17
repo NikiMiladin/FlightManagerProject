@@ -24,6 +24,14 @@ namespace FlightManager.Models
                     return true;
                 else return false;
             }
+            set
+            {
+                if(value==true)
+                {
+                    TicketType = Ticket.Business;
+                }
+                else TicketType = Ticket.Economy;
+            }
         }
         public Ticket TicketType { get; set; }
     }
