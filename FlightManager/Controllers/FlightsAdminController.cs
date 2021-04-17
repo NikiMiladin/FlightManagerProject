@@ -156,7 +156,7 @@ namespace FlightManager.Controllers
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
             
-            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights.ToList());
             return View(model);
         }
         
