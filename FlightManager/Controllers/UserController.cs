@@ -27,9 +27,6 @@ namespace FlightManager.Controllers
             _roleManager = roleManager;
             _mapper = mapper;
         }     
-        public IActionResult Index()
-        {
- 
         public async Task<IActionResult> Index(ICollection<UserViewModel> userModels)
         {
             IEnumerable<ApplicationUser> users = _userManager.Users.OrderBy(user => user.UserName).ToList();
