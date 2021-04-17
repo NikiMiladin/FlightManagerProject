@@ -1,8 +1,10 @@
 ﻿@model FlightAdminViewModel
+
 <div class="container">
     @using (Html.BeginForm("Edit", "FlightsAdmin", FormMethod.Post,
- new { @class = "" }))
+new { @class = "" }))
     {
+        <div class="text-danger" asp-validation-summary="All"></div>
         <div class="form-group">
             @Html.LabelFor(model => model.DepartureCity, "Departure City")
             @Html.EditorFor(model => model.DepartureCity, new { htmlAttributes = new { placeholder = "Departure City", @class = "form-control" } })

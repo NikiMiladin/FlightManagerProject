@@ -105,14 +105,38 @@ namespace FlightManager.Controllers
             {
                 return NotFound();
             }
+            ReservationDetailsViewModel model = new ReservationDetailsViewModel();
+            model.Pager = model.Pager ?? new Models.PagerViewModel();
+            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+            model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;
+            model.Filter = model.Filter ?? new Models.Filters.ReservationsFilterViewModel();
+            bool emptyEmail = string.IsNullOrWhiteSpace(model.Filter.Email);
 
-            ReservationDetailsViewModel model = new ReservationDetailsViewModel()
+            IQueryable<Reservation> reservations = flight.Reservations.Where(
+                    item => (emptyEmail || item.Email.Contains(model.Filter.Email)) && (item.FlightId == id)).AsQueryable();
+
+            model.Pager.Pages = (int)Math.Ceiling((double)reservations.Count() / model.Pager.ItemsPerPage);
+            reservations = reservations.OrderBy(item => item.Id)
+             .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
+              .Take(model.Pager.ItemsPerPage);
+            model.DetailsAboutReservations = flight.Reservations.Select(item => new ReservationsViewModel()
             {
-                DetailsAboutReservations = flight.Reservations.Select(re => new Models.ReservationsViewModel()
-                { Id = re.Id, FlightId = re.FlightId, Email = re.Email,
-                    PassengersEconomyCount = re.PassengersEconomyCount,
-                    PassengersBusinessCount = re.PassengersBusinessCount })
-             };
+                Id = item.Id,
+                FlightId = item.FlightId,
+                Email = item.Email,
+                PassengersEconomyCount = item.PassengersEconomyCount,
+                PassengersBusinessCount = item.PassengersBusinessCount
+            });
+            /* ReservationDetailsViewModel model = new ReservationDetailsViewModel()
+             {
+
+
+                 DetailsAboutReservations = flight.Reservations.Select(re => new Models.ReservationsViewModel()
+                 { Id = re.Id, FlightId = re.FlightId, Email = re.Email,
+                     PassengersEconomyCount = re.PassengersEconomyCount,
+                     PassengersBusinessCount = re.PassengersBusinessCount 
+                 })
+             };*/
 
             return View(model);
         }

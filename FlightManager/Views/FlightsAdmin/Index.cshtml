@@ -10,7 +10,7 @@
             }))
             {
                 <div class="form-group">
-                    @Html.EditorFor(model => model.Filter.PilotName, new { placeholder = "Pilot name" })
+                    @Html.EditorFor(model => model.Filter.PilotName, new {htmlAttribute = new { placeholder = "Pilot name" } })
                 </div>
                 <button class="btn btn-primary">
                     Filter by pilot name

@@ -3,8 +3,9 @@
     <div class="container">
         <form asp-action="Add" asp-controller="Reservations" method="post">
             @using (Html.BeginForm("Add", "Reservations", FormMethod.Post,
-      new { @class = "" }))
+     new { @class = "" }))
             {
+                <div class="text-danger" asp-validation-summary="All"></div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.Email, "Email")
                     @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "Email", @class = "form-control" } })

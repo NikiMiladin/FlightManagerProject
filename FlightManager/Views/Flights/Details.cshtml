@@ -6,7 +6,20 @@
 
 <div class="container-fluid">
     <div class="card">
-        
+        <div class="card-header d-flex">
+            @using (Html.BeginForm("Details", "FlightAdmin", FormMethod.Get, new
+            {
+                @class = "navbar-search col-10"
+            }))
+            {
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Filter.Email, new { placeholder = "Email" })
+                </div>
+                <button class="btn btn-primary">
+                    Filter by email
+                </button>
+            }
+        </div>
         <div class="card-body">
             <table class="w3-table-all">
                 <thead>
@@ -35,6 +48,16 @@
             </table>
         </div>
 
-
+        <div>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.Pager.Pages; i++)
+                {
+                    <li class="page-item @(i==Model.Pager.CurrentPage ? "active": "")">
+                        <a asp-route-Filter.Email="@Model.Filter.Email"
+                           asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
 </div>

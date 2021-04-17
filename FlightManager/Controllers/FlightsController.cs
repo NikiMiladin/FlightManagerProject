@@ -21,8 +21,25 @@ namespace FlightManager.Controllers
         }
         public IActionResult List(FlightIndexViewModel model)
         {
-            IQueryable<Flight> flights = _flightRepository.Items;
-            flights.OrderBy(item => item.Id);
+            model.Pager = model.Pager ?? new Models.PagerViewModel();
+            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+            model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;
+
+            model.Filter = model.Filter ?? new Models.Filters.FlightsFilterViewModel();
+
+            bool emptyPilotName = string.IsNullOrWhiteSpace(model.Filter.PilotName);
+
+
+            IQueryable<Flight> flights = _flightRepository.Items.Where(
+                   item => (emptyPilotName || item.PilotName.Contains(model.Filter.PilotName)));
+
+            model.Pager.Pages = (int)Math.Ceiling((double)flights.Count() / model.Pager.ItemsPerPage);
+
+
+            flights = flights.OrderBy(item => item.Id)
+                .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
+                .Take(model.Pager.ItemsPerPage);
+
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
@@ -70,21 +87,32 @@ namespace FlightManager.Controllers
                 return NotFound();
             }
 
-            ReservationDetailsViewModel model = new ReservationDetailsViewModel()
+            ReservationDetailsViewModel model = new ReservationDetailsViewModel();
+            model.Pager = model.Pager ?? new Models.PagerViewModel();
+            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+            model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;
+            model.Filter = model.Filter ?? new Models.Filters.ReservationsFilterViewModel();
+            bool emptyEmail = string.IsNullOrWhiteSpace(model.Filter.Email);
+
+            IQueryable<Reservation> reservations = flight.Reservations.Where(
+                    item => (emptyEmail || item.Email.Contains(model.Filter.Email)) && (item.FlightId == id)).AsQueryable();
+
+            model.Pager.Pages = (int)Math.Ceiling((double)reservations.Count() / model.Pager.ItemsPerPage);
+            reservations = reservations.OrderBy(item => item.Id)
+             .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
+              .Take(model.Pager.ItemsPerPage);
+            model.DetailsAboutReservations = flight.Reservations.Select(item => new ReservationsViewModel()
             {
-                DetailsAboutReservations = flight.Reservations.Select(re => new Models.ReservationsViewModel()
-                {
-                    Id = re.Id,
-                    FlightId = re.FlightId,
-                    Email = re.Email,
-                    PassengersEconomyCount = re.PassengersEconomyCount,
-                    PassengersBusinessCount = re.PassengersBusinessCount
-                })
-            };
+                Id = item.Id,
+                FlightId = item.FlightId,
+                Email = item.Email,
+                PassengersEconomyCount = item.PassengersEconomyCount,
+                PassengersBusinessCount = item.PassengersBusinessCount
+            });
 
             return View(model);
         }
-        public IActionResult Index2(FlightIndexViewModel model)
+       /* public IActionResult Index2(FlightListViewModel model)
         {
             model.Pager = model.Pager ?? new Models.PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
@@ -92,11 +120,13 @@ namespace FlightManager.Controllers
 
             model.Filter = model.Filter ?? new Models.Filters.FlightsFilterViewModel();
 
-            bool emptyPilotName = string.IsNullOrWhiteSpace(model.Filter.PilotName);
+            bool emptyDepartureCity = string.IsNullOrWhiteSpace(model.Filter.DepartureCity);
+            bool emptyArrivalCity = string.IsNullOrWhiteSpace(model.Filter.ArrivalCity);
 
 
             IQueryable<Flight> flights = _flightRepository.Items.Where(
-                   item => (emptyPilotName || item.PilotName.Contains(model.Filter.PilotName)));
+                   item => (emptyDepartureCity || item.DepartureCity.Contains(model.Filter.DepartureCity)) 
+                   && (emptyArrivalCity || item.ArrivalCity.Contains(model.Filter.ArrivalCity)));
 
             model.Pager.Pages = (int)Math.Ceiling((double)flights.Count() / model.Pager.ItemsPerPage);
 
@@ -107,26 +137,40 @@ namespace FlightManager.Controllers
 
 
 
-            model.Items = flights.Select(item => new FlightAdminViewModel()
+            model.Items = flights.Select(item => new FlightViewModel()
             {
                 Id = item.Id,
                 DepartureCity = item.DepartureCity,
                 ArrivalCity = item.ArrivalCity,
                 DepartureTime = item.DepartureTime,
                 ArrivalTime = item.ArrivalTime,
-                PlaneModel = item.PlaneModel,
-                PlaneID = item.PlaneID,
-                PilotName = item.PilotName,
-                CapacityEconomyPassengers = item.CapacityEconomyPassengers,
-                CapacityBusinessPassengers = item.CapacityBusinessPassengers
+               
             });
             return View(model);
-        }
+        }*/
         public IActionResult Index(FlightListViewModel model)
         {
-            
-            IQueryable<Flight> flights = _flightRepository.Items;
-            flights.OrderBy(item => item.Id);
+
+            model.Pager = model.Pager ?? new Models.PagerViewModel();
+            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+            model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;
+
+            model.Filter = model.Filter ?? new Models.Filters.FlightsFilterViewModel();
+
+            bool emptyDepartureCity = string.IsNullOrWhiteSpace(model.Filter.DepartureCity);
+            bool emptyArrivalCity = string.IsNullOrWhiteSpace(model.Filter.ArrivalCity);
+
+
+            IQueryable<Flight> flights = _flightRepository.Items.Where(
+                   item => (emptyDepartureCity || item.DepartureCity.Contains(model.Filter.DepartureCity))
+                   && (emptyArrivalCity || item.ArrivalCity.Contains(model.Filter.ArrivalCity)));
+
+            model.Pager.Pages = (int)Math.Ceiling((double)flights.Count() / model.Pager.ItemsPerPage);
+
+
+            flights = flights.OrderBy(item => item.Id)
+                .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
+                .Take(model.Pager.ItemsPerPage);
             model.Items = flights.Select(item => new FlightViewModel()
             {
                 Id = item.Id,
