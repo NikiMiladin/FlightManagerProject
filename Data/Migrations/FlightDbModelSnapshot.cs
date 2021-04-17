@@ -151,6 +151,9 @@ namespace Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsBusiness")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -162,9 +165,6 @@ namespace Data.Migrations
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("TicketType")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

@@ -1,16 +1,24 @@
 @model LoginViewModel
-<h1 class="bg-info text-white">Login</h1>
-<div class="text-danger" asp-validation-summary="All"></div>
-  
-<form asp-action="Login" method="post">
-    <input type="hidden" asp-for="ReturnUrl" />
-    <div class="form-group">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" />
+@{ 
+    ViewData["Title"] = "Login";
+}
+<div class="container bg-light">
+    <h1>Login</h1>
+    <div class="container bg-light">
+        <div class="card-body">
+        <div class="text-danger" asp-validation-summary="All"></div>
+            <form asp-action="Login" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                </div>
+                <button class="btn btn-primary" type="submit">Log In</button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-    </div>
-    <button class="btn btn-primary" type="submit">Log In</button>
-</form>
+</div>

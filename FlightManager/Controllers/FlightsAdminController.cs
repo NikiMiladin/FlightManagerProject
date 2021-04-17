@@ -7,16 +7,22 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+
 namespace FlightManager.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class FlightsAdminController : Controller
     {
         private readonly IFlightRepository _flightRepository;
+        private readonly IPassengerRepository _passengerRepository;
+        private readonly IMapper _mapper;
 
-        public FlightsAdminController(IFlightRepository flightRepository)
+        public FlightsAdminController(IFlightRepository flightRepository,IPassengerRepository passengerRepository, IMapper mapper)
         {
             _flightRepository = flightRepository;
+            _passengerRepository = passengerRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -25,19 +31,7 @@ namespace FlightManager.Controllers
             FlightAdminViewModel model;
             if (flight != null)
             {
-                model = new FlightAdminViewModel()
-                {
-                    Id = flight.Id,
-                    DepartureCity = flight.DepartureCity,
-                    ArrivalCity = flight.ArrivalCity,
-                    DepartureTime = flight.DepartureTime,
-                    ArrivalTime = flight.ArrivalTime,
-                    PlaneModel = flight.PlaneModel,
-                    PlaneID = flight.PlaneID,
-                    PilotName = flight.PilotName,
-                    CapacityEconomyPassengers = flight.CapacityEconomyPassengers,
-                    CapacityBusinessPassengers = flight.CapacityBusinessPassengers
-                };
+                model = _mapper.Map<FlightAdminViewModel>(flight);
             }
             else
             {
@@ -52,21 +46,7 @@ namespace FlightManager.Controllers
             {
                 return View(model);
             }
-
-            await _flightRepository.AddOrUpdate(new Flight()
-            {
-                Id = model.Id,
-                DepartureCity = model.DepartureCity,
-                ArrivalCity = model.ArrivalCity,
-                DepartureTime = model.DepartureTime,
-                ArrivalTime = model.ArrivalTime,
-                PlaneModel = model.PlaneModel,
-                PlaneID = model.PlaneID,
-                PilotName = model.PilotName,
-                CapacityEconomyPassengers = model.CapacityEconomyPassengers,
-                CapacityBusinessPassengers = model.CapacityBusinessPassengers,
-                Reservations = null
-            });
+            await _flightRepository.AddOrUpdate(_mapper.Map<Flight>(model));
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -83,6 +63,8 @@ namespace FlightManager.Controllers
                 return RedirectToAction("Index");
             }
         }
+        
+        
         [Authorize]
         public IActionResult Index(FlightIndexViewModel model)
         {

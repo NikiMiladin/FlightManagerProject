@@ -19,5 +19,7 @@ namespace FlightManager.Models
                 return ArrivalTime.Subtract(DepartureTime);
             }
         }
+        public int CapacityEconomyPassengers { get; set; }
+        public int CapacityBusinessPassengers { get; set; }
     }
 }

@@ -41,13 +41,17 @@ namespace FlightManager.Controllers
             
             IQueryable<Flight> flights = _flightRepository.Items;
             flights.OrderBy(item => item.Id);
+            flights = flights.Where(item => item.DepartureTime > DateTime.Now 
+                && (item.CapacityBusinessPassengers>0 || item.CapacityEconomyPassengers>0));
             model.Items = flights.Select(item => new FlightViewModel()
             {
                 Id = item.Id,
                 DepartureCity = item.DepartureCity,
                 ArrivalCity = item.ArrivalCity,
                 DepartureTime = item.DepartureTime,
-                ArrivalTime = item.ArrivalTime
+                ArrivalTime = item.ArrivalTime,
+                CapacityEconomyPassengers = item.CapacityEconomyPassengers,
+                CapacityBusinessPassengers = item.CapacityBusinessPassengers
             }) ;
             return View(model);
         }
