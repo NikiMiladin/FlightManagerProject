@@ -108,3 +108,9 @@ input[type="checkbox"].input-validation-error {
 .btn {
     width: 80px;
 }
+.icon-green {
+  color:#66ff66
+}
+.icon-red  {
+  color: #ff3333;
+}

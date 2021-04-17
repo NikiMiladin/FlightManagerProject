@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "defaultDestination": "/wwwroot/lib",
+  "libraries": [
+    {
+      "library": "font-awesome@5.15.3",
+      "destination": "wwwroot/lib/font-awesome",
+      "files": [
+          "js/all.min.js"
+      ]
+  }
+  ]
+}

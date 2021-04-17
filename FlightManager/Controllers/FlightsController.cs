@@ -6,6 +6,7 @@ using Data.Entity;
 using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace FlightManager.Controllers
 {
@@ -13,11 +14,12 @@ namespace FlightManager.Controllers
     {
         private readonly IFlightRepository _flightRepository;
         private readonly IReservationRepository _reservationRepository;
-
-        public FlightsController(IFlightRepository flightRepository, IReservationRepository reservationRepository)
+        private readonly IMapper _mapper;
+        public FlightsController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IMapper mapper)
         {
             _flightRepository = flightRepository;
             _reservationRepository = reservationRepository;
+            _mapper = mapper;
         }
         public IActionResult List(FlightIndexViewModel model)
         {
@@ -171,14 +173,7 @@ namespace FlightManager.Controllers
             flights = flights.OrderBy(item => item.Id)
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
-            model.Items = flights.Select(item => new FlightViewModel()
-            {
-                Id = item.Id,
-                DepartureCity = item.DepartureCity,
-                ArrivalCity = item.ArrivalCity,
-                DepartureTime = item.DepartureTime,
-                ArrivalTime = item.ArrivalTime
-            }) ;
+            model.Items = _mapper.Map<ICollection<FlightViewModel>>(flights);       
             return View(model);
         }
     }

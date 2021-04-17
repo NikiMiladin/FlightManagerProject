@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,6 +30,7 @@ namespace Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EGN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsEmployed = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -211,7 +212,7 @@ namespace Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EGN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TicketType = table.Column<bool>(type: "bit", nullable: false)
+                    IsBusiness = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

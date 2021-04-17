@@ -15,11 +15,6 @@ namespace Data
         public virtual DbSet<Passenger> Passengers {get; set;}
         public virtual DbSet<Reservation> Reservations {get; set;}
 
-        public FlightDb(DbContextOptions<FlightDb> options)
-        : base(options)
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

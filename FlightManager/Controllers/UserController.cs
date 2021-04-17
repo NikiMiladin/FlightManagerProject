@@ -8,78 +8,73 @@ using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using FlightManager.Models.Details;
+using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+
 
 namespace FlightManager.Controllers
 {
+    //[Authorize(Roles = "Administrator")]
     public class UserController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
+        private IMapper _mapper;
  
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-        }
-
-       
+            _mapper = mapper;
+        }     
         public IActionResult Index()
         {
-            
-            return View(_userManager.Users);
+ 
+        public async Task<IActionResult> Index(ICollection<UserViewModel> userModels)
+        {
+            IEnumerable<ApplicationUser> users = _userManager.Users.OrderBy(user => user.UserName).ToList();
+            foreach (var user in users)
+            {   
+                UserViewModel userModel = _mapper.Map<UserViewModel>(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                if(roles.Any(role => role == "Administrator"))
+                {
+                    userModel.IsAdmin = true;
+                }
+               userModels.Add(userModel);
+            }
+            return View(userModels);
         }
         public ViewResult Create() => View();
        
         [HttpPost]
-        public async Task<IActionResult> Create(UserViewModel user)
+        public async Task<IActionResult> Create(UserViewModel model)
         {
             if(ModelState.IsValid)
             {
+                //ApplicationUser user = _mapper.Map<ApplicationUser>(model);
+               //user.IsEmployed = true;
                 ApplicationUser appUser = new ApplicationUser{
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EGN = user.EGN,
-                    Address = user.Address,
-                    Email= user.Email,
-                    PhoneNumber = user.PhoneNumber
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    EGN = model.EGN,
+                    Address = model.Address,
+                    Email= model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    IsEmployed = true
                 };
-                IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
+                IdentityResult result = await _userManager.CreateAsync(appUser, model.Password);
                 if(result.Succeeded)
                 {   
-                    if(_userManager.GetUsersInRoleAsync("Administrator").Result.Count() == 0)
-                    {
-                        result = await _userManager.AddToRoleAsync(appUser,"Administrator");
-                        if(result.Succeeded)
-                        {return RedirectToAction("Index");}
-                        else
-                        {
-                            foreach (IdentityError error in result.Errors){
-                                ModelState.AddModelError("", error.Description);
-                                }
-                        }                    
-                    }
-                    else 
-                    {
-                        await _userManager.AddToRoleAsync(appUser,"Employee");
-                        if(result.Succeeded)
-                        {return RedirectToAction("Index");}
-                        else
-                        {
-                            foreach (IdentityError error in result.Errors){
-                                ModelState.AddModelError("", error.Description);
-                                }     
-                        }   
-                    }
-               }
+                    return RedirectToAction("Index");                 
+                }
                 else
                 {
-                    foreach (IdentityError error in result.Errors){
-                        ModelState.AddModelError("", error.Description);
-                        }
+                    AddErrors(result);
                 }
             }
-            return View(user);
+            return View(model);
         }
         public async Task<IActionResult> Edit(string id)
         {
@@ -87,19 +82,11 @@ namespace FlightManager.Controllers
             UserViewModel model;
             if(user != null)
             {
-                model = new UserViewModel{
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EGN = user.EGN,
-                    Address = user.Address,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber
-                };
+                model = _mapper.Map<UserViewModel>(user);
             }
             else
             {
-                model = new UserViewModel();
+                return RedirectToAction("Index");                 
             }
             return View(model);
         }
@@ -114,6 +101,8 @@ namespace FlightManager.Controllers
             ApplicationUser user = await _userManager.FindByIdAsync(model.Id);
             if(user != null)
             {
+                user = _mapper.Map<ApplicationUser>(model);
+                /*
                 user.UserName = model.UserName;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
@@ -121,33 +110,59 @@ namespace FlightManager.Controllers
                 user.Address = model.Address;
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
+                */
                 result = await _userManager.UpdateAsync(user);
                 if(!result.Succeeded)
                 {
-                    foreach(IdentityError error in result.Errors)
-                    {
-                        ModelState.AddModelError("",error.Description);
-                    }
+                    AddErrors(result);
+                    return View(model);
                 }
             }
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete (string id)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
+            IdentityResult result;
+            if(user != null)
+            {
+            user.IsEmployed = false;
+            result = await _userManager.UpdateAsync(user);
+            if(!result.Succeeded)
+            {
+                AddErrors(result);
+            }
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteRecord(string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            IdentityResult result;
             if (user != null)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                    return RedirectToAction("Index");
-                //else
-                   // Errors(result);
+                result = await _userManager.DeleteAsync(user);
+                if(!result.Succeeded)
+                {
+                    AddErrors(result);
+                }
+                return RedirectToAction("Index");
             }
             else
+            {
                 ModelState.AddModelError("", "User Not Found");
-            return View("Index", _userManager.Users);
+            }
+            return RedirectToAction("Index");
+        }
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }

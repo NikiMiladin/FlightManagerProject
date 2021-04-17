@@ -7,7 +7,7 @@ using FlightManager.Models.Filters;
 
 namespace FlightManager.Models
 {
-    public class FlightIndexViewModel : BaseIndexViewModel
+    public class FlightAdminListViewModel : BaseIndexViewModel
     {
         public IQueryable<FlightAdminViewModel> Items { get; set; }
         public FlightsFilterViewModel Filter { get; set; }

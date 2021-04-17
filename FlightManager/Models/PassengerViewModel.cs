@@ -16,6 +16,6 @@ namespace FlightManager.Models
         public string LastName { get; set; }
         public string EGN { get; set; }
         public string PhoneNumber { get; set; }
-        public bool TicketType { get; set; }
+        public bool IsBusiness { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightManager.MappingProfile;
 using Data;
 using Data.Repositories;
 using Data.Entity;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlightManager
@@ -28,8 +30,7 @@ namespace FlightManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<FlightDb>(options =>
-                options.UseSqlServer("DefaultConnection"));
+            services.AddDbContext<FlightDb>();
             services.AddControllersWithViews();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
@@ -38,7 +39,12 @@ namespace FlightManager
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
             services.AddSession();
-        
+            //    services.AddAuthorization(options =>
+            //    {
+            //        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //            .RequireAuthenticatedUser()
+            //            .Build();
+            //    });
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
@@ -47,12 +53,14 @@ namespace FlightManager
                 options.LogoutPath = "/Account/Logout"; 
                 options.AccessDeniedPath = "/Account/AccessDenied"; 
             });
-
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
            // services.AddTransient<FlightDbContextSeedData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -73,9 +81,7 @@ namespace FlightManager
             app.UseAuthentication();
             app.UseAuthorization();
 
-           
-
-            Data.FlightDbContextSeedData.SeedRoles(roleManager);
+            Data.FlightDbContextSeedData.SeedAdmin(roleManager,userManager,"ADMINISTRATOR","P@ssw0rd");
             
             app.UseEndpoints(endpoints =>
             {

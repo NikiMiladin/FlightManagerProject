@@ -1,5 +1,8 @@
-﻿@model FlightIndexViewModel
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@model FlightAdminListViewModel
+@using Microsoft.AspNetCore.Identity
+@using Data.Entity
+@inject UserManager<ApplicationUser> UserManager
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
 <div class="container-fluid">
     <div class="card">
@@ -51,12 +54,13 @@
                             <td>@item.PilotName</td>
                             <td>@item.CapacityEconomyPassengers</td>
                             <td>@item.CapacityBusinessPassengers</td>
-                            <td>
-                                <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id})" class="btn btn-primary">Details</a>
-                            </td>
-                            <td>
-                                <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
-                                <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                            <td>              
+                                <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                                @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
+                                {
+                                    <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
+                                    <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                                }
                             </td>
                         </tr>
                     }

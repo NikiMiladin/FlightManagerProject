@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FlightManager.Models.Details;
 using FlightManager.Models.Utils;
+using AutoMapper;
 
 
 namespace FlightManager.Controllers
@@ -19,12 +20,13 @@ namespace FlightManager.Controllers
         private readonly IFlightRepository _flightRepository;
         private readonly IReservationRepository _reservationRepository;
         private readonly IPassengerRepository _passengerRepository;
-
-        public FlightsAdminController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IPassengerRepository passengerRepository)
+        private readonly IMapper _mapper;
+        public FlightsAdminController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IPassengerRepository passengerRepository, IMapper mapper)
         {
             _flightRepository = flightRepository;
             _reservationRepository = reservationRepository;
             _passengerRepository = passengerRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -33,6 +35,8 @@ namespace FlightManager.Controllers
             FlightAdminViewModel model;
             if (flight != null)
             {
+                model = _mapper.Map<FlightAdminViewModel>(flight);
+                /*
                 model = new FlightAdminViewModel()
                 {
                     Id = flight.Id,
@@ -46,6 +50,7 @@ namespace FlightManager.Controllers
                     CapacityEconomyPassengers = flight.CapacityEconomyPassengers,
                     CapacityBusinessPassengers = flight.CapacityBusinessPassengers
                 };
+                */
             }
             else
             {
@@ -60,8 +65,9 @@ namespace FlightManager.Controllers
             {
                 return View(model);
             }
-
-            await _flightRepository.AddOrUpdate(new Flight()
+            Flight flight = _mapper.Map<Flight>(model);
+            await _flightRepository.AddOrUpdate(flight);
+            /*await _flightRepository.AddOrUpdate(new Flight()
             {
                 Id = model.Id,
                 DepartureCity = model.DepartureCity,
@@ -74,7 +80,7 @@ namespace FlightManager.Controllers
                 CapacityEconomyPassengers = model.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = model.CapacityBusinessPassengers,
                 Reservations = null
-            });
+            });*/
             return RedirectToAction("Index");
         }
 
@@ -146,7 +152,8 @@ namespace FlightManager.Controllers
             Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
             if (flight == null)
             {
-                return NotFound();
+                //return NotFound();
+                return RedirectToAction("Index"); //trqbva mi vtoro mnenie
             }
             else
             {
@@ -155,7 +162,7 @@ namespace FlightManager.Controllers
             }
         }
         [Authorize]
-        public IActionResult Index(FlightIndexViewModel model)
+        public IActionResult Index(FlightAdminListViewModel model)
         {
 
             //model.Pager ??= new PagerViewModel();
@@ -177,9 +184,9 @@ namespace FlightManager.Controllers
             flights = flights.OrderBy(item => item.Id)
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
-
-           
-          
+            
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
+            /*flights.OrderBy(item => item.Id);
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
@@ -192,8 +199,7 @@ namespace FlightManager.Controllers
                 PilotName = item.PilotName,
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });
-            
+            });*/
             return View(model);
         }
         
