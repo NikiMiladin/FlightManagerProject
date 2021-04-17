@@ -1,4 +1,7 @@
-﻿@model FlightAdminListViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using Data.Entity
+@inject UserManager<ApplicationUser> UserManager
+@model FlightAdminListViewModel
 <h1>Flights</h1>
 <div class="container-fluid">
     <div class="card">
@@ -38,10 +41,11 @@
                             <td>@item.CapacityBusinessPassengers</td>
                             <td>
                                 <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
-                            </td>
-                            <td>
-                                <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
-                                <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                                @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
+                                {
+                                    <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
+                                    <a href="@Url.Action("Delete","FlightsAdmin", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                                }
                             </td>
                         </tr>
                     }
