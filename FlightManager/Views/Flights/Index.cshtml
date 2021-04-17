@@ -1,4 +1,7 @@
 ﻿@model FlightListViewModel
+@{
+    ViewData["Title"] = "Flights";
+}
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
 <div class="container-fluid">
@@ -30,6 +33,8 @@
                     <th>Arrival City</th>
                     <th>Departure Time</th>
                     <th>Flight Duration</th>
+                    <th>Free Economy Seats</th>
+                    <th>Free Business Seats</th>
                     <th>Book Tickets</th>
                     <tbody>
                         @foreach (var item in Model.Items)
@@ -40,6 +45,8 @@
                                 <td>@item.ArrivalCity</td>
                                 <td>@item.DepartureTime</td>
                                 <td>@item.FlightDuration</td>
+                                <td>@item.CapacityEconomyPassengers</td>
+                                <td>@item.CapacityBusinessPassengers</td>
                                 <td>
                                     <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
 

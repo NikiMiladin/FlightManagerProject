@@ -3,9 +3,11 @@
 @using Data.Entity
 @inject UserManager<ApplicationUser> UserManager
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@{ 
+    ViewData["Title"] = "Flights";
+}
 <h1>Flights</h1>
 <div class="container-fluid">
-    <div class="card">
         <div class="card-header d-flex">
             @using (Html.BeginForm("Index", "FlightsAdmin", FormMethod.Get, new
             {
@@ -28,18 +30,18 @@
         <div class="card-body">
             <table class="w3-table-all">
                 <thead>
-                <th>Id</th>
-                <th>Departure City</th>
-                <th>Arrival City</th>
-                <th>Departure Time</th>
-                <th>Flight Duration</th>
-                <th>Plane Model</th>
-                <th>Plane Id</th>
-                <th>Pilot Name</th>
-                <th>Economy Passengers Capacity</th>
-                <th>Business Passengers Capacity</th>
-                <th>Reservations</th>
-                </th>
+                    <th>Id</th>
+                    <th>Departure City</th>
+                    <th>Arrival City</th>
+                    <th>Departure Time</th>
+                    <th>Flight Duration</th>
+                    <th>Plane Model</th>
+                    <th>Plane Id</th>
+                    <th>Pilot Name</th>
+                    <th>Economy Passengers Capacity</th>
+                    <th>Business Passengers Capacity</th>
+                    <th>Reservations</th>
+                </thead>
                 <tbody>
                     @foreach (var item in Model.Items)
                     {

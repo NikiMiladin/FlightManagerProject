@@ -1,25 +1,33 @@
-﻿
 @model ReservationsViewModel
-    <div class="container">
-        <form asp-action="Add" asp-controller="Reservations" method="post">
-        <div class="text-danger" asp-validation-summary="All"></div>
-            @using (Html.BeginForm("Add", "Reservations", FormMethod.Post,
-     new { @class = "" }))
-            {
-                <div class="text-danger" asp-validation-summary="All"></div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Email, "Email")
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "Email", @class = "form-control" } })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PassengersEconomyCount, "Number of passengers to fly in Economy class")
-                    @Html.EditorFor(model => model.PassengersEconomyCount, new { htmlAttributes = new { placeholder = "Number of passengers", @class = "form-control" } })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PassengersBusinessCount, "Number of passengers to fly in Business class")
-                    @Html.EditorFor(model => model.PassengersBusinessCount, new { htmlAttributes = new { placeholder = "Number of passengers", @class = "form-control" } })
-                </div>
-                <input type="submit" value="Save" class="btn btn-primary" />
-            }
-        </form>
-    </div>
+@{
+    ViewData["Title"] = "Add Reservation";
+    var message = ViewData["Message"];
+}
+@if (message != null)
+{
+    <span class="error text-danger">@message</span>
+}
+<div class="container">
+    <form asp-action="Add" asp-controller="Reservations" method="post">
+        @using (Html.BeginForm("Add", "Reservations", FormMethod.Post,
+          new { @class = "" }))
+        {
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, "Email")
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "Email", @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.PassengersEconomyCount, "Number of passengers to fly in Economy class")
+                @Html.EditorFor(model => model.PassengersEconomyCount, new { htmlAttributes = new { placeholder = "Number of passengers", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PassengersEconomyCount, null, new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.PassengersBusinessCount, "Number of passengers to fly in Business class")
+                @Html.EditorFor(model => model.PassengersBusinessCount, new { htmlAttributes = new { placeholder = "Number of passengers", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PassengersBusinessCount, null, new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+            <input type="submit" value="Save" class="btn btn-primary" />
+        }
+    </form>
+</div>

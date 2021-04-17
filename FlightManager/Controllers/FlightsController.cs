@@ -32,29 +32,18 @@ namespace FlightManager.Controllers
             bool emptyPilotName = string.IsNullOrWhiteSpace(model.Filter.PilotName);
 
 
-            IQueryable<Flight> flights = _flightRepository.Items.Where(
-                   item => (emptyPilotName || item.PilotName.Contains(model.Filter.PilotName)));
+            ICollection<Flight> flights = _flightRepository.Items.Where(
+                   item => (emptyPilotName || item.PilotName.Contains(model.Filter.PilotName))).ToList();
 
             model.Pager.Pages = (int)Math.Ceiling((double)flights.Count() / model.Pager.ItemsPerPage);
 
 
             flights = flights.OrderBy(item => item.Id)
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
-                .Take(model.Pager.ItemsPerPage);
+                .Take(model.Pager.ItemsPerPage)
+                .ToList();
 
-            model.Items = flights.Select(item => new FlightAdminViewModel()
-            {
-                Id = item.Id,
-                DepartureCity = item.DepartureCity,
-                ArrivalCity = item.ArrivalCity,
-                DepartureTime = item.DepartureTime,
-                ArrivalTime = item.ArrivalTime,
-                PlaneModel = item.PlaneModel,
-                PlaneID = item.PlaneID,
-                PilotName = item.PilotName,
-                CapacityEconomyPassengers = item.CapacityEconomyPassengers,
-                CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
             return View(model);
         }
         public IActionResult PassengersDetails(int id)
@@ -152,7 +141,6 @@ namespace FlightManager.Controllers
         }*/
         public IActionResult Index(FlightListViewModel model)
         {
-
             model.Pager = model.Pager ?? new Models.PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
             model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;

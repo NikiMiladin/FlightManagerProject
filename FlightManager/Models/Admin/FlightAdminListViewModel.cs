@@ -9,7 +9,7 @@ namespace FlightManager.Models
 {
     public class FlightAdminListViewModel : BaseIndexViewModel
     {
-        public IQueryable<FlightAdminViewModel> Items { get; set; }
+        public ICollection<FlightAdminViewModel> Items { get; set; }
         public FlightsFilterViewModel Filter { get; set; }
     }
 }

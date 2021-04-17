@@ -4,18 +4,18 @@
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <a asp-controller="Account" asp-action="Index">Edit</a>
+        <a class="navbar-brand nav-link text-dark" asp-controller="Account" asp-action="Index">Edit</a>
     </li>
     <li class="nav-item">
-        <a asp-controller="Account" asp-action="ChangePassword">Change your password</a>
+        <a class="navbar-brand nav-link text-dark" asp-controller="Account" asp-action="ChangePassword">Change your password</a>
     </li>
     @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User),"Administrator"))
     {
     <li class="nav-item">
-        <a asp-controller="User" asp-action="Index">Manage all users</a>
+        <a class="navbar-brand nav-link text-dark" asp-controller="User" asp-action="Index">Manage all users</a>
     </li>
     <li class="nav-item">
-        <a asp-controller="FlightsAdmin" asp-action="Index">Manage flights</a>
+        <a class="navbar-brand nav-link text-dark" asp-controller="FlightsAdmin" asp-action="Index">Manage flights</a>
     </li>
     }
 </ul>

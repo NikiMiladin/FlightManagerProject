@@ -1,35 +1,39 @@
 ﻿@model PassengerViewModel
+@{ 
+    ViewData["Title"] = "Add Passengers";
+}    
 <div class="container">
     @using (Html.BeginForm("AddPassengers", "Reservations", FormMethod.Post,
-new { @class = "" }))
-    {
-    <div class="text-danger" asp-validation-summary="All"></div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, "First name")
-        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "First name", @class = "field - validation - valid", } })
-        <input type="text" data-val="true" data-val-required="Не указано имя" id="Name" name="Name" value="" />
-        <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
-    </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.MiddleName, "Middle name")
-            @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { placeholder = "Middle name", @class = "form-control" } })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, "Last name")
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { placeholder = "Last name", @class = "form-control" } })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.EGN, "EGN")
-            @Html.EditorFor(model => model.EGN, new { htmlAttributes = new { placeholder = "EGN", @class = "form-control" } })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.PhoneNumber, "Phone number")
-            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { placeholder = "Phone number", @class = "form-control" } })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsBusiness, "Ticket type - Business / Economy")
-            @Html.EditorFor(model => model.IsBusiness, new { htmlAttributes = new { placeholder = "Ticket type", @class = "form-control" } })
-        </div>
-        <input type="submit" value="Save" class="btn btn-primary" />
-    }
+        new { @class = "" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.FirstName, "First name")
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "First name", @class = "form-control" } })
+                <input type="text" data-val="true" data-val-required="Не указано имя" id="Name" name="Name" value="" />
+                <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MiddleName, "Middle name")
+                @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { placeholder = "Middle name", @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.LastName, "Last name")
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { placeholder = "Last name", @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.EGN, "EGN")
+                @Html.EditorFor(model => model.EGN, new { htmlAttributes = new { placeholder = "EGN", @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.PhoneNumber, "Phone number")
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { placeholder = "Phone number", @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.TicketType, "Ticket type")
+            </div>
+            <div class="form-group">
+                @Html.DropDownListFor(model => model.TicketType, (IEnumerable<SelectListItem>)ViewBag.TicketsType, new { htmlAttributes = new { placeholder = "Ticket type", @class = "form-control" } })
+            </div>
+            <input type="submit" value="Save" class="btn btn-primary" />
+        }
 </div>

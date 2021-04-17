@@ -36,21 +36,6 @@ namespace FlightManager.Controllers
             if (flight != null)
             {
                 model = _mapper.Map<FlightAdminViewModel>(flight);
-                /*
-                model = new FlightAdminViewModel()
-                {
-                    Id = flight.Id,
-                    DepartureCity = flight.DepartureCity,
-                    ArrivalCity = flight.ArrivalCity,
-                    DepartureTime = flight.DepartureTime,
-                    ArrivalTime = flight.ArrivalTime,
-                    PlaneModel = flight.PlaneModel,
-                    PlaneID = flight.PlaneID,
-                    PilotName = flight.PilotName,
-                    CapacityEconomyPassengers = flight.CapacityEconomyPassengers,
-                    CapacityBusinessPassengers = flight.CapacityBusinessPassengers
-                };
-                */
             }
             else
             {
@@ -65,22 +50,7 @@ namespace FlightManager.Controllers
             {
                 return View(model);
             }
-            Flight flight = _mapper.Map<Flight>(model);
-            await _flightRepository.AddOrUpdate(flight);
-            /*await _flightRepository.AddOrUpdate(new Flight()
-            {
-                Id = model.Id,
-                DepartureCity = model.DepartureCity,
-                ArrivalCity = model.ArrivalCity,
-                DepartureTime = model.DepartureTime,
-                ArrivalTime = model.ArrivalTime,
-                PlaneModel = model.PlaneModel,
-                PlaneID = model.PlaneID,
-                PilotName = model.PilotName,
-                CapacityEconomyPassengers = model.CapacityEconomyPassengers,
-                CapacityBusinessPassengers = model.CapacityBusinessPassengers,
-                Reservations = null
-            });*/
+            await _flightRepository.AddOrUpdate(_mapper.Map<Flight>(model));
             return RedirectToAction("Index");
         }
 
@@ -161,10 +131,11 @@ namespace FlightManager.Controllers
                 return RedirectToAction("Index");
             }
         }
+        
+        
         [Authorize]
         public IActionResult Index(FlightAdminListViewModel model)
         {
-
             //model.Pager ??= new PagerViewModel();
             model.Pager = model.Pager ?? new Models.PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
@@ -185,21 +156,7 @@ namespace FlightManager.Controllers
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
             
-            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights).AsQueryable();
-            /*flights.OrderBy(item => item.Id);
-            model.Items = flights.Select(item => new FlightAdminViewModel()
-            {
-                Id = item.Id,
-                DepartureCity = item.DepartureCity,
-                ArrivalCity = item.ArrivalCity,
-                DepartureTime = item.DepartureTime,
-                ArrivalTime = item.ArrivalTime,
-                PlaneModel = item.PlaneModel,
-                PlaneID = item.PlaneID,
-                PilotName = item.PilotName,
-                CapacityEconomyPassengers = item.CapacityEconomyPassengers,
-                CapacityBusinessPassengers = item.CapacityBusinessPassengers
-            });*/
+            model.Items = _mapper.Map<ICollection<FlightAdminViewModel>>(flights);
             return View(model);
         }
         
