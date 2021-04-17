@@ -8,7 +8,7 @@ namespace FlightManager.Models
     public class PagerViewModel
     {
         public int Pages { get; set; }
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; set; } 
         public int ItemsPerPage { get; set; }
     }
 }

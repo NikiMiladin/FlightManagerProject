@@ -1,0 +1,36 @@
+﻿@model FlightManager.Models.PassengerListViewModel
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
+<h1>Passengers details</h1>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <table class="w3-table-all">
+                <thead>
+                <th>Reservation id</th>
+                <th>First name</th>
+                <th>Middle name</th>
+                <th>Last name</th>
+                <th>EGN</th>
+                <th>Phone</th>
+                <th>Ticket type</th>
+                </th>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr class="w3-hover-blue">
+                            <td>@item.ReservationId</td>
+                            <td>@item.FirstName</td>
+                            <td>@item.MiddleName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.EGN</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.TicketType</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

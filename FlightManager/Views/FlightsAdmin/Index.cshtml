@@ -1,31 +1,46 @@
 ﻿@model FlightIndexViewModel
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
 <div class="container-fluid">
     <div class="card">
+        <div class="card-header d-flex">
+            @using (Html.BeginForm("Index", "FlightsAdmin", FormMethod.Get, new
+            {
+                @class = "navbar-search col-10"
+            }))
+            {
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Filter.PilotName, new { placeholder = "Pilot name" })
+                </div>
+                <button class="btn btn-primary">
+                    Filter by pilot name
+                </button>
+            }
+        </div>
         <div class="card-header d-flex">
             <div class="col-2">
                 <a href="@Url.Action("Edit","FlightsAdmin")" class="btn btn-success">Add</a>
             </div>
         </div>
         <div class="card-body">
-            <table class="table-responsive table table-bordered table-striped col-12">
+            <table class="w3-table-all">
                 <thead>
-                    <th>Id</th>
-                    <th>Departure City</th>
-                    <th>Arrival City</th>
-                    <th>Departure Time</th>
-                    <th>Flight Duration</th>
-                    <th>Plane Model</th>
-                    <th>Plane Id</th>
-                    <th>Pilot Name</th>
-                    <th>Economy Passengers Capacity</th>
-                    <th>Business Passengers Capacity</th>
-                    <th>Reservations</th>
+                <th>Id</th>
+                <th>Departure City</th>
+                <th>Arrival City</th>
+                <th>Departure Time</th>
+                <th>Flight Duration</th>
+                <th>Plane Model</th>
+                <th>Plane Id</th>
+                <th>Pilot Name</th>
+                <th>Economy Passengers Capacity</th>
+                <th>Business Passengers Capacity</th>
+                <th>Reservations</th>
                 </th>
                 <tbody>
-                    @foreach(var item in Model.Items)
+                    @foreach (var item in Model.Items)
                     {
-                        <tr>
+                        <tr class="w3-hover-blue">
                             <td>@item.Id</td>
                             <td>@item.DepartureCity</td>
                             <td>@item.ArrivalCity</td>
@@ -37,7 +52,7 @@
                             <td>@item.CapacityEconomyPassengers</td>
                             <td>@item.CapacityBusinessPassengers</td>
                             <td>
-                                <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                                <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id})" class="btn btn-primary">Details</a>
                             </td>
                             <td>
                                 <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
@@ -47,6 +62,17 @@
                     }
                 </tbody>
             </table>
+        </div>
+        <div>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.Pager.Pages; i++)
+                {
+                    <li class="page-item @(i==Model.Pager.CurrentPage ? "active": "")">
+                        <a asp-route-Filter.PilotName="@Model.Filter.PilotName"
+                           asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
 </div>

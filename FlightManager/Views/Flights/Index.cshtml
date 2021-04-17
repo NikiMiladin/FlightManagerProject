@@ -1,9 +1,10 @@
 ﻿@model FlightListViewModel
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <table class="table-responsive table table-bordered table-striped col-12">
+            <table class="w3-table-all">
                 <thead>
                 <th>Id</th>
                 <th>Departure City</th>
@@ -14,7 +15,7 @@
                 <tbody>
                     @foreach (var item in Model.Items)
                     {
-                    <tr>
+                    <tr class="w3-hover-blue">
                         <td>@item.Id</td>
                         <td>@item.DepartureCity</td>
                         <td>@item.ArrivalCity</td>

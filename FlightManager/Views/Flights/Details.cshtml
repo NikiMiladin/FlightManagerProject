@@ -1,0 +1,40 @@
+﻿@model ReservationDetailsViewModel
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div>
+    <h1>Reservation details</h1>
+</div>
+
+<div class="container-fluid">
+    <div class="card">
+        
+        <div class="card-body">
+            <table class="w3-table-all">
+                <thead>
+                <th>Reservation Id</th>
+                <th>Flight id</th>
+                <th>Reservation email</th>
+                <th>Econony tickets</th>
+                <th>Business tickets</th>
+                <th>Passengers</th>
+                </th>
+                <tbody>
+                    @foreach (var item in Model.DetailsAboutReservations)
+                    {
+                        <tr class="w3-hover-blue">
+                            <td>@item.Id</td>
+                            <td>@item.FlightId</td>
+                            <td>@item.Email</td>
+                            <td>@item.PassengersEconomyCount</td>
+                            <td>@item.PassengersBusinessCount</td>
+                            <td>
+                                <a href="@Url.Action("PassengersDetails","Flights", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>

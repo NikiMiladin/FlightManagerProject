@@ -1,0 +1,50 @@
+﻿@model ReservationDetailsViewModel
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <h1>Reservation details</h1>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex">
+                @using (Html.BeginForm("Details", "FlightAdmin", FormMethod.Get, new
+                {
+                    @class = "navbar-search col-10"
+                }))
+                {
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Filter.Email, new { placeholder = "Email" })
+                    </div>
+                    <button class="btn btn-primary">
+                        Filter by email
+                    </button>
+                }
+            </div>
+            <div class="card-body">
+                <table class="w3-table-all">
+                    <thead>
+                    <th>Reservation idId</th>
+                    <th>Flight id</th>
+                    <th>Reservation email</th>
+                    <th>Econony tickets</th>
+                    <th>Business tickets</th>
+                    <th>Passengers</th>
+                    </th>
+                    <tbody>
+                        @foreach (var item in Model.DetailsAboutReservations)
+                        {
+                            <tr class="w3-hover-blue">
+                                <td>@item.Id</td>
+                                <td>@item.FlightId</td>
+                                <td>@item.Email</td>
+                                <td>@item.PassengersEconomyCount</td>
+                                <td>@item.PassengersBusinessCount</td>
+                                <td>
+                                    <a href="@Url.Action("PassengersDetails","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+
+        </div>
+    </div>

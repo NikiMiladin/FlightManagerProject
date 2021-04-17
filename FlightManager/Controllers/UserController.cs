@@ -7,7 +7,7 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-
+using FlightManager.Models.Details;
 
 namespace FlightManager.Controllers
 {
@@ -21,12 +21,15 @@ namespace FlightManager.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
- 
+
+       
         public IActionResult Index()
         {
+            
             return View(_userManager.Users);
         }
         public ViewResult Create() => View();
+       
         [HttpPost]
         public async Task<IActionResult> Create(UserViewModel user)
         {

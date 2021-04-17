@@ -8,6 +8,7 @@ namespace Data.Entity
         public string LastName { get; set;}
         public string EGN { get; set;}
         public string Address { get; set;}
+      
     }
     
 }

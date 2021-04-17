@@ -7,16 +7,24 @@ using Data.Repositories;
 using FlightManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using FlightManager.Models.Details;
+using FlightManager.Models.Utils;
+
+
 namespace FlightManager.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class FlightsAdminController : Controller
     {
         private readonly IFlightRepository _flightRepository;
+        private readonly IReservationRepository _reservationRepository;
+        private readonly IPassengerRepository _passengerRepository;
 
-        public FlightsAdminController(IFlightRepository flightRepository)
+        public FlightsAdminController(IFlightRepository flightRepository, IReservationRepository reservationRepository, IPassengerRepository passengerRepository)
         {
             _flightRepository = flightRepository;
+            _reservationRepository = reservationRepository;
+            _passengerRepository = passengerRepository;
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -69,6 +77,45 @@ namespace FlightManager.Controllers
             });
             return RedirectToAction("Index");
         }
+
+        
+        public IActionResult PassengersDetails(int id)
+        {
+          
+            Reservation reservation = _reservationRepository.Items.SingleOrDefault(item => item.Id == id);
+            if(reservation == null)
+            {
+                return NotFound();
+            }
+            PassengerListViewModel model = new PassengerListViewModel()
+            {
+                Items = reservation.Passengers.Select(pass => new Models.PassengerViewModel() { ReservationId = pass.ReservationId, FirstName = pass.FirstName,
+                    MiddleName = pass.MiddleName, 
+                    LastName = pass.LastName,
+                EGN = pass.EGN, PhoneNumber = pass.PhoneNumber,
+                    TicketType = pass.TicketType })
+            };
+            return View(model);
+        }
+        public IActionResult Details(int id) //details about reservations
+        {
+          
+           Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
+            if(flight == null)
+            {
+                return NotFound();
+            }
+
+            ReservationDetailsViewModel model = new ReservationDetailsViewModel()
+            {
+                DetailsAboutReservations = flight.Reservations.Select(re => new Models.ReservationsViewModel()
+                { Id = re.Id, FlightId = re.FlightId, Email = re.Email,
+                    PassengersEconomyCount = re.PassengersEconomyCount,
+                    PassengersBusinessCount = re.PassengersBusinessCount })
+             };
+
+            return View(model);
+        }
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -86,8 +133,29 @@ namespace FlightManager.Controllers
         [Authorize]
         public IActionResult Index(FlightIndexViewModel model)
         {
-            IQueryable<Flight> flights = _flightRepository.Items;
-            flights.OrderBy(item => item.Id);
+
+            //model.Pager ??= new PagerViewModel();
+            model.Pager = model.Pager ?? new Models.PagerViewModel();
+            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+            model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;
+           
+            model.Filter = model.Filter ?? new Models.Filters.FlightsFilterViewModel();
+
+            bool emptyPilotName = string.IsNullOrWhiteSpace(model.Filter.PilotName);
+
+
+            IQueryable<Flight> flights = _flightRepository.Items.Where(
+                   item => (emptyPilotName || item.PilotName.Contains(model.Filter.PilotName)));
+
+            model.Pager.Pages = (int)Math.Ceiling((double)flights.Count() / model.Pager.ItemsPerPage);
+           
+
+            flights = flights.OrderBy(item => item.Id)
+                .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
+                .Take(model.Pager.ItemsPerPage);
+
+           
+          
             model.Items = flights.Select(item => new FlightAdminViewModel()
             {
                 Id = item.Id,
@@ -101,7 +169,11 @@ namespace FlightManager.Controllers
                 CapacityEconomyPassengers = item.CapacityEconomyPassengers,
                 CapacityBusinessPassengers = item.CapacityBusinessPassengers
             });
+            
             return View(model);
         }
+        
+        
+            
     }
 }

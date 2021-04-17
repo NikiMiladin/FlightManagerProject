@@ -37,6 +37,7 @@ namespace FlightManager
             services.AddIdentity<ApplicationUser,IdentityRole>()
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
+            services.AddSession();
         
             services.ConfigureApplicationCookie(options =>
             {    
@@ -67,9 +68,12 @@ namespace FlightManager
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+           
 
             Data.FlightDbContextSeedData.SeedRoles(roleManager);
             
