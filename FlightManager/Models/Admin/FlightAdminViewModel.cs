@@ -9,9 +9,13 @@ namespace FlightManager.Models
     public class FlightAdminViewModel : IValidatableObject
     {
         public int Id { get; set; }
+        [Required]
         public string DepartureCity { get; set; }
+        [Required]
         public string ArrivalCity { get; set; }
+        [Required]
         public DateTime DepartureTime { get; set; }
+        [Required]
         public DateTime ArrivalTime { get; set; }
         public TimeSpan FlightDuration
         {
@@ -20,8 +24,11 @@ namespace FlightManager.Models
                 return ArrivalTime.Subtract(DepartureTime);
             }
         }
+        [Required]
         public string PlaneModel { get; set; }
+        [Required]
         public int PlaneID { get; set; }
+        [Required]
         public string PilotName { get; set; }
         public int CapacityEconomyPassengers { get; set; }
         public int CapacityBusinessPassengers { get; set; }

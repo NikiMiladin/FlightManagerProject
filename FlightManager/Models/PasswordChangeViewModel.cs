@@ -8,7 +8,9 @@ namespace FlightManager.Models
 {
     public class PasswordChangeViewModel
     {
+        [DataType(DataType.Password)]
         public string OldPassword { get; set;}
+        [DataType(DataType.Password)]
         public string NewPassword { get; set;}
 
     }

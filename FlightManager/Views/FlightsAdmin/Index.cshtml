@@ -8,6 +8,7 @@
 }
 <h1>Flights</h1>
 <div class="container-fluid">
+    <div class=" card">
         <div class="card-header d-flex">
             @using (Html.BeginForm("Index", "FlightsAdmin", FormMethod.Get, new
             {
@@ -17,7 +18,7 @@
                 <div class="form-group">
                     @Html.EditorFor(model => model.Filter.PilotName, new {htmlAttribute = new { placeholder = "Pilot name" } })
                 </div>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" style=" width : 200px">
                     Filter by pilot name
                 </button>
             }
@@ -41,6 +42,7 @@
                     <th>Economy Passengers Capacity</th>
                     <th>Business Passengers Capacity</th>
                     <th>Reservations</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Items)
@@ -58,6 +60,8 @@
                             <td>@item.CapacityBusinessPassengers</td>
                             <td>              
                                 <a href="@Url.Action("Details","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Details</a>
+                            </td>
+                            <td>
                                 @if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
                                 {
                                     <a href="@Url.Action("Edit","FlightsAdmin", new { Id = item.Id })" class="btn btn-primary">Edit</a>
@@ -81,4 +85,5 @@
             </ul>
         </div>
     </div>
+   
 </div>

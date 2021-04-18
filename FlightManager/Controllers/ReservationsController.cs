@@ -63,7 +63,7 @@ namespace FlightManager.Controllers
                 }
                 else
                 {
-                    //да изпишем на потребителя че няма толкова и такива свободни места, каквито желае
+                   
                     if (model.Flight.CapacityEconomyPassengers < model.PassengersEconomyCount && 
                         model.Flight.CapacityBusinessPassengers < model.PassengersBusinessCount)
                     {

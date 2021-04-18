@@ -1,4 +1,7 @@
 ﻿<!DOCTYPE html>
+@using Data.Entity
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,98 +9,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <script src="~/lib/jquery/dist/jquery.min.js"></script> 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script defer src="~/lib/font-awesome/js/all.min.js"></script>
     <style>
-        #MintMenu {
-            background-color: #B00;
+        #Menu {
+            background-color: #ffffff;
             border-color: #B00;
         }
 
-            #MintMenu ul li a {
+            #Menu ul li a {
                 color: #ffffff;
             }
 
-            #MintMenu ul li:hover {
-                background-color: #000;
+            #Menu ul li:hover {
+                background-color: #ade4ee;
             }
     </style>
 </head>
 <body>
-    <header>
-    <nav class="navbar navbar-default navbar-fixed-top" id="MintMenu">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="background-color: #000">
+    <header class=" mb-5">
+        <nav class="navbar navbar-default navbar-fixed-top" id="Menu">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="background-color: #ffffff">
 
-                    <span class="navbar-toggler-icon" style="        background-color: #ffffff"></span>
-                  
+                        <span class="navbar-toggler-icon" style=" background-color: #ffffff">
+                            <i class="fas fa-bars"></i>
+                        </span>
 
-                </button>
-                <a class="navbar-brand" style="        color: #ffffff" href="#">Flight Manager</a>
-            
 
-              <div class="collapse navbar-collapse" id="MainNavBar">
-                <ul class="nav navbar-nav navbar-right">
+                    </button>
+                    <a class="navbar-brand" style=" color: #000000" href="#">Flight Manager</a>
 
-                    <li class="active"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class=" nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Flights" asp-action="Index">Flights</a></li>
-                    <li class=" nav-item">
-                        <div class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" href="#" id="adminDropdownToggle"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">Admin</a>
-                            <div class="dropdown-menu" aria-labelledby="adminDropdownToggle">
-                                <a class="dropdown-item text-dark"
-                                   asp-area=""
-                                   asp-controller="FlightsAdmin"
-                                   asp-action="Index">
-                                    Flights
-                                </a>
-                                <a class="dropdown-item text-dark"
-                                   asp-area=""
-                                   asp-controller="User"
-                                   asp-action="Index">
-                                    Users
-                                </a>
 
-                            </div>
-                        </div>
-                    </li>
-                    <li class=" nav-item">
-                        <div class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" href="#" id="adminDropdownToggle"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">User</a>
-                            <div class="dropdown-menu" aria-labelledby="adminDropdownToggle">
-                                <a class=" dropdown-item-text-dark"
-                                   asp-area=""
-                                   asp-controller="Flights"
-                                   asp-action="List">
-                                    Flights
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                    <div class="collapse navbar-collapse" id="MainNavBar">
+                        <ul class="nav navbar-nav navbar-right">
+
+
+                            @if (await UserManager.GetUserAsync(User) == null)
+                            {
+                                <li class=" nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Flights" asp-action="Index">Flights</a></li>
+
+                            }
+                                
+                                @if (await UserManager.GetUserAsync(User) != null)
+                                {
+
+
+                                    @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
+                                    {
+                                        <li class=" nav-item">
+                                            <div class="nav-item dropdown">
+                                                <a class="nav-link text-dark dropdown-toggle" href="#" id="adminDropdownToggle"
+                                                   data-toggle="dropdown"
+                                                   aria-haspopup="true"
+                                                   aria-expanded="false">Admin</a>
+                                                <div class="dropdown-menu" aria-labelledby="adminDropdownToggle">
+                                                    <a class="dropdown-item text-dark"
+                                                       asp-area=""
+                                                       asp-controller="FlightsAdmin"
+                                                       asp-action="Index">
+                                                        Flights
+                                                    </a>
+                                                    <a class="dropdown-item text-dark"
+                                                       asp-area=""
+                                                       asp-controller="User"
+                                                       asp-action="Index">
+                                                        Users
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    }
+
+                                    @if (!await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
+                                    {
+                                        <li class=" nav-item">
+                                            <div class="nav-item dropdown">
+                                                <a class="nav-link text-dark dropdown-toggle" href="#" id="adminDropdownToggle"
+                                                   data-toggle="dropdown"
+                                                   aria-haspopup="true"
+                                                   aria-expanded="false">User</a>
+                                                <div class="dropdown-menu" aria-labelledby="adminDropdownToggle">
+                                                    <a class=" dropdown-item-text-dark"
+                                                       asp-area=""
+                                                       asp-controller="Flights"
+                                                       asp-action="List">
+                                                        Flights
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    }
+                                }
+
+
+
+
+                            </ul>
+                    </div>
+                </div>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
-           </div>
-        </div>
-        @await Html.PartialAsync("_LoginPartial")
-    </nav>
-  </header>
+        </nav>
+    </header>
 
 
-    <div class="container-fluid">
+    <div class="container-fluid bg-light ml-3 mr-auto" stype="width:98%">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

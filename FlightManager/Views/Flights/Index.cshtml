@@ -4,7 +4,7 @@
 }
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <h1>Flights</h1>
-<div class="container-fluid">
+<div class="container-fluid bg-light">
     <div class="card">
         <div class="card-header d-flex">
             @using (Html.BeginForm("Index", "Flights", FormMethod.Get, new
@@ -18,8 +18,8 @@
                 <div class="form-group">
                     @Html.EditorFor(model => model.Filter.ArrivalCity, new { htmlAttributes = new { placeholder = "Arrival city" } })
                 </div>
-                <button class="btn btn-primary">
-                    Filter 
+                <button class="btn btn-primary" style=" width : 200px">
+                    Filter
                 </button>
             }
         </div>
