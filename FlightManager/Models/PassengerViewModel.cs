@@ -23,7 +23,6 @@ namespace FlightManager.Models
         public string EGN { get; set; }
         [Required]
         [MaxLength(10, ErrorMessage ="Max 10 digits")]
-        
         public string PhoneNumber { get; set; }
         public bool IsBusiness
         {

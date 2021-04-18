@@ -168,7 +168,7 @@ namespace FlightManager.Controllers
                     return RedirectToAction("AddPassengers", reservation);
                 }
             }
-            return RedirectToAction("Index", "Flights");
+            return View(model);
         }       
             [Authorize]
             public IActionResult Index(ReservationDetailsViewModel model)
