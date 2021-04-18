@@ -130,6 +130,7 @@ namespace FlightManager.Controllers
             flights = flights.OrderBy(item => item.Id)
                 .Skip((model.Pager.CurrentPage - 1) * model.Pager.ItemsPerPage)
                 .Take(model.Pager.ItemsPerPage);
+            flights = flights.Where(item => item.DepartureTime > DateTime.Now && item.CapacityEconomyPassengers != 0 && item.CapacityBusinessPassengers != 0);
             model.Items = _mapper.Map<ICollection<FlightViewModel>>(flights).AsQueryable();       
             return View(model);
         }
