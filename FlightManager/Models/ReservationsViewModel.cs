@@ -13,6 +13,7 @@ namespace FlightManager.Models
         public int Id { get; set; }
         public int FlightId { get; set; }
         public Flight Flight { get; set; }
+        [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Invalid email")]
         public string Email { get; set; }
         public int PassengersEconomyCount { get; set; }

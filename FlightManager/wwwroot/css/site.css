@@ -16,6 +16,7 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+  width : 150px;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -106,7 +107,7 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 .btn {
-    width: 80px;
+    width: 150px;
 }
 .icon-green {
   color:#66ff66

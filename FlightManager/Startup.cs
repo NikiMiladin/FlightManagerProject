@@ -39,19 +39,25 @@ namespace FlightManager
                     .AddEntityFrameworkStores<FlightDb>()
                     .AddDefaultTokenProviders();
             services.AddSession();
-            //    services.AddAuthorization(options =>
-            //    {
-            //        options.FallbackPolicy = new AuthorizationPolicyBuilder()
-            //            .RequireAuthenticatedUser()
-            //            .Build();
-            //    });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                     policy => policy.RequireRole("Administrator"));
+            });
+           /* services.AddAuthorization(options =>
+                {
+                    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });*/
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout"; 
-                options.AccessDeniedPath = "/Account/AccessDenied"; 
+                options.AccessDeniedPath = "/Account/AccessDenied";
+              
             });
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -85,7 +91,7 @@ namespace FlightManager
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Flights}/{action=Index}/{id?}");
             });
         }
     }
