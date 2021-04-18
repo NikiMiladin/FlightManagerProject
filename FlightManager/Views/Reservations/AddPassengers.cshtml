@@ -10,6 +10,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, "First name")
             @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "First name", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FirstName)
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.MiddleName, "Middle name")
