@@ -10,7 +10,6 @@ namespace FlightManager.Models
 {
     public  class ReservationDetailsViewModel : BaseIndexViewModel
     {
-        // v Views/FlightsAdmin/Details pokazwa detailna informaciq za rezervaciite toest koi putnici sa w rezerwaciqta
         public IEnumerable<ReservationsViewModel> DetailsAboutReservations { get; set; }
         public ReservationsFilterViewModel Filter { get; set; }
         

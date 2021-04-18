@@ -49,12 +49,6 @@
                                 <td>@item.CapacityBusinessPassengers</td>
                                 <td>
                                     <a href="@Url.Action("Add","Reservations", new { Id = item.Id })" class="btn btn-primary">Add Reservation</a>
-
-                                    @**<form asp-action="Add" asp-controller="Reservations" asp-route-id="@item.Id" method="get">
-                                        <button type="submit" class="btn btn-sm btn-primary">
-                                            Add Reservation
-                                        </button>
-                                    </form>**@
                                 </td>
                             </tr>
                         }

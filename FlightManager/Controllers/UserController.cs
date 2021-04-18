@@ -14,7 +14,7 @@ using AutoMapper;
 
 namespace FlightManager.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     public class UserController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -49,9 +49,7 @@ namespace FlightManager.Controllers
         {
             if(ModelState.IsValid)
             {
-                //ApplicationUser user = _mapper.Map<ApplicationUser>(model);
-               //user.IsEmployed = true;
-                ApplicationUser appUser = new ApplicationUser{
+                ApplicationUser user = new ApplicationUser{
                     UserName = model.UserName,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
@@ -61,7 +59,7 @@ namespace FlightManager.Controllers
                     PhoneNumber = model.PhoneNumber,
                     IsEmployed = true
                 };
-                IdentityResult result = await _userManager.CreateAsync(appUser, model.Password);
+                IdentityResult result = await _userManager.CreateAsync(user, model.Password);
                 if(result.Succeeded)
                 {   
                     return RedirectToAction("Index");                 
@@ -98,8 +96,6 @@ namespace FlightManager.Controllers
             ApplicationUser user = await _userManager.FindByIdAsync(model.Id);
             if(user != null)
             {
-                user = _mapper.Map<ApplicationUser>(model);
-                /*
                 user.UserName = model.UserName;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
@@ -107,7 +103,6 @@ namespace FlightManager.Controllers
                 user.Address = model.Address;
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
-                */
                 result = await _userManager.UpdateAsync(user);
                 if(!result.Succeeded)
                 {
