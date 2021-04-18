@@ -103,40 +103,24 @@ namespace FlightManager.Controllers
                 PassengersEconomyCount = item.PassengersEconomyCount,
                 PassengersBusinessCount = item.PassengersBusinessCount
             });
-            /* ReservationDetailsViewModel model = new ReservationDetailsViewModel()
-             {
-
-
-                 DetailsAboutReservations = flight.Reservations.Select(re => new Models.ReservationsViewModel()
-                 { Id = re.Id, FlightId = re.FlightId, Email = re.Email,
-                     PassengersEconomyCount = re.PassengersEconomyCount,
-                     PassengersBusinessCount = re.PassengersBusinessCount 
-                 })
-             };*/
-
             return View(model);
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             Flight flight = _flightRepository.Items.SingleOrDefault(item => item.Id == id);
-            if (flight == null)
-            {
-                //return NotFound();
-                return RedirectToAction("Index"); //trqbva mi vtoro mnenie
-            }
-            else
+            if (flight != null)
             {
                 await _flightRepository.Delete(flight);
+            }   
                 return RedirectToAction("Index");
-            }
+            
         }
         
         
         [Authorize]
         public IActionResult Index(FlightAdminListViewModel model)
         {
-            //model.Pager ??= new PagerViewModel();
             model.Pager = model.Pager ?? new Models.PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
             model.Pager.ItemsPerPage = model.Pager.ItemsPerPage <= 0 ? 10 : model.Pager.ItemsPerPage;

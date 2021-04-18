@@ -9,6 +9,7 @@ using AutoMapper;
 
 namespace FlightManager.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -21,7 +22,7 @@ namespace FlightManager.Controllers
             _userManager = userMngr;
             _mapper = mapper;
         }
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             if(!_signInManager.IsSignedIn(User))
@@ -34,6 +35,7 @@ namespace FlightManager.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             LoginViewModel login = new LoginViewModel();
@@ -60,21 +62,30 @@ namespace FlightManager.Controllers
                 {
                     await _signInManager.SignOutAsync();
                     Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(applicationUser, login.Password, false, false);
-                    if (result.Succeeded)
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError(nameof(login.Username), "Login Failed: Invalid Username or password");
+                    }
+                    else
+                    {
                         return Redirect(login.ReturnUrl ?? "/");
+                    }
                 }
             }
             return View(login);
         }
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index","Flights");
         }
+        [AllowAnonymous]
         public IActionResult AccessDenied()
         {
             return View();
         }
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(UserViewModel model)
         {
@@ -98,10 +109,12 @@ namespace FlightManager.Controllers
             }
                return RedirectToAction("Index", "Account");
         }
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
         }
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel model)

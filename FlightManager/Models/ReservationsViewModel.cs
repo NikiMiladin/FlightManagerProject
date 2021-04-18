@@ -16,6 +16,7 @@ namespace FlightManager.Models
         [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Invalid email")]
         public string Email { get; set; }
+        
         public int PassengersEconomyCount { get; set; }
         public int PassengersBusinessCount { get; set; }
         public ICollection<PassengerViewModel> Passengers { get; set; }
@@ -23,7 +24,11 @@ namespace FlightManager.Models
         {
             if(PassengersBusinessCount==0 && PassengersEconomyCount==0)
             {
-                yield return new ValidationResult("You should add number of passengers!");
+                yield return new ValidationResult("You cannot make an reservation with no passengers!");
+            }
+            if(PassengersBusinessCount<0 || PassengersEconomyCount<0)
+            {
+                yield return new ValidationResult("You cannot order fewer that zero tickets!");
             }
         }
     }

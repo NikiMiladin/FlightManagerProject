@@ -40,23 +40,18 @@ namespace FlightManager
                     .AddDefaultTokenProviders();
             services.AddSession();
             services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole",
-                     policy => policy.RequireRole("Administrator"));
-            });
-           /* services.AddAuthorization(options =>
                 {
                     options.FallbackPolicy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
                         .Build();
-                });*/
+                });
             services.ConfigureApplicationCookie(options =>
             {    
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout"; 
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.AccessDeniedPath = "/Flights/Index";
               
             });
             
